@@ -18,6 +18,7 @@
   a { color: inherit; text-decoration: none; }
   button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
   .wrap { width: min(1180px, 100% - 48px); margin-inline: auto; }
+  .wide { width: min(1720px, 100% - 56px); margin-inline: auto; }
 
   nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
   .brand { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
@@ -32,16 +33,18 @@
   .textlink:hover { color: var(--soft); }
   .textlink::after { content: " ›"; }
 
-  .top { display: flex; align-items: end; justify-content: space-between; gap: 40px; padding: 18px 0 26px; }
-  h1 { font-size: clamp(40px, 5.2vw, 72px); line-height: 1; font-weight: 600; letter-spacing: -0.035em; }
+  /* Hero: the pitch and the controls on the left, the demo as large as the window allows on the right. */
+  .hero { display: grid; grid-template-columns: minmax(300px, 390px) 1fr; gap: clamp(32px, 4vw, 72px); align-items: center; min-height: min(calc(100vh - 64px), 960px); padding-bottom: 40px; }
+  h1 { font-size: clamp(44px, 4.6vw, 76px); line-height: 1; font-weight: 600; letter-spacing: -0.035em; }
   h1 span { color: #a1a1a6; }
-  .lede { margin-top: 14px; color: var(--soft); font-size: clamp(18px, 1.55vw, 21px); max-width: 33em; }
-  .top .actions { display: flex; align-items: center; gap: 24px; flex: none; padding-bottom: 6px; }
+  .lede { margin-top: 20px; color: var(--soft); font-size: clamp(18px, 1.35vw, 21px); }
+  .pitch .actions { display: flex; align-items: center; gap: 24px; margin-top: 30px; }
+  .try { margin-top: clamp(36px, 6vh, 72px); padding-top: 26px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; align-items: start; }
 
   /* ---------- demo ---------- */
   /* Sized from the viewport height so the screen and its controls fit the first view as one unit. */
-  #stage { width: min(100%, max(640px, calc((100vh - 392px) * 1.7778))); margin-inline: auto; }
-  .display { position: relative; aspect-ratio: 16 / 9; width: 100%;
+  #stage { width: min(100%, calc((100vh - 120px) * 1.6)); justify-self: end; }
+  .display { position: relative; aspect-ratio: 16 / 10; width: 100%;
     border-radius: 14px; overflow: hidden; container-type: inline-size; background: #8fa3b8;
     background-image: linear-gradient(160deg, #c9d6df 0%, #9db3c6 38%, #6f8aa6 70%, #4d6885 100%);
     box-shadow: 0 0 0 1px rgba(0,0,0,.12), 0 30px 60px -30px rgba(0,0,0,.35); }
@@ -113,23 +116,19 @@
   .pfoot { display: flex; align-items: center; gap: .8cqw; } .pfoot span { padding: .4cqw .9cqw; border-radius: .55cqw; background: rgba(255,255,255,.1); display: flex; gap: .45cqw; align-items: center; font-size: .98cqw; }
   .pfoot span svg { width: 1.15cqw; height: 1.15cqw; } .pfoot code { color: #77777f; font: .85cqw ui-monospace, "SF Mono", Menlo, monospace; } .pfoot span:last-child { margin-left: auto; }
 
-  .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 2px 14px; flex-wrap: wrap; }
-  .seg { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--fill); }
-  .seg button, .acts button { padding: 8px 17px; border-radius: 999px; font-size: 15px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: background .15s, color .15s, box-shadow .15s; }
+  .seg { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--fill); }
+  .seg button, .acts button { padding: 10px 18px; border-radius: 999px; font-size: 16px; white-space: nowrap; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: background .15s, color .15s, box-shadow .15s; }
   .seg button[aria-pressed="true"] { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.14), 0 0 0 .5px rgba(0,0,0,.06); }
   .seg button:not([aria-pressed="true"]) { color: var(--soft); } .seg button:not([aria-pressed="true"]):hover { color: var(--ink); }
   .seg .live { width: 8px; height: 8px; border-radius: 50%; background: #c7c7cc; } .seg button[aria-pressed="true"] .live { background: #30b650; box-shadow: 0 0 0 3px rgba(48,182,80,.2); }
-  .acts { display: flex; gap: 6px; } .acts button { background: var(--fill); } .acts button:hover { background: #e8e8ed; } .acts button[aria-pressed="true"] { background: var(--ink); color: #fff; }
-  .note { color: var(--soft); font-size: 16px; padding: 14px 2px 0; min-height: 40px; }
+  .acts { display: flex; gap: 8px; flex-wrap: wrap; } .acts button { background: none; box-shadow: inset 0 0 0 1px var(--line); } .acts button:hover { background: #e8e8ed; } .acts button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+
 
   /* ---------- the rest: a few big lines ---------- */
   section { padding-top: clamp(96px, 13vw, 170px); }
-  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; border-top: 1px solid var(--line); padding-top: 36px; }
-  .three h2 { font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -.02em; font-weight: 600; margin-bottom: 10px; }
-  .three p { color: var(--soft); font-size: clamp(18px, 1.6vw, 21px); }
   .big { font-size: clamp(34px, 5.2vw, 68px); line-height: 1.06; letter-spacing: -.035em; font-weight: 600; max-width: 17em; }
   .big span { color: #a1a1a6; }
-  .after { margin-top: 28px; color: var(--soft); font-size: clamp(19px, 1.8vw, 23px); max-width: 30em; }
+
   #film video { display: block; width: 100%; border-radius: 14px; box-shadow: 0 0 0 1px rgba(0,0,0,.12); }
   .end { text-align: center; padding: clamp(110px, 14vw, 190px) 0 clamp(90px, 10vw, 140px); }
   .end .eyes { font-size: 84px; line-height: 1; margin-bottom: 18px; }
@@ -138,7 +137,7 @@
   footer { border-top: 1px solid var(--line); padding: 22px 0 44px; color: var(--soft); font-size: 15px; display: flex; justify-content: space-between; }
 
   @media (max-width: 860px) {
-    .top { flex-direction: column; align-items: start; gap: 20px; padding-top: 12px; }
+    .hero { grid-template-columns: 1fr; min-height: 0; gap: 28px; padding-top: 12px; } .try { margin-top: 28px; }
     #stage { width: 100%; }
     /* Phones: the mail window on top, the popover enlarged underneath it. */
     .display { aspect-ratio: 100 / 184; } .badge { inset: 0 0 50% 0; }
@@ -148,14 +147,14 @@
     .menubar { height: 4.4cqw; font-size: 2.1cqw; } .menubar span:not(.r) { display: none; } .menubar .eye { width: 2.8cqw; height: 2.8cqw; }
     .pop { zoom: 2.2; top: 27.5cqw; right: 9.5cqw; } .pop::before { display: none; }
     .badge b { font-size: 4.6cqw; } .badge span { font-size: 2.5cqw; } .badge svg { width: 9cqw; height: 9cqw; } .badge div { padding: 5cqw 6cqw; border-radius: 4.5cqw; }
-    .seg button, .acts button { padding: 8px 13px; font-size: 14px; }
-    .three { grid-template-columns: 1fr; gap: 30px; }
+    .seg button, .acts button { padding: 9px 14px; font-size: 15px; }
+
     nav .links a.opt { display: none; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wide">
   <nav>
     <a class="brand" href="#"><span>👀</span>SideEye</a>
     <div class="links">
@@ -164,29 +163,28 @@
     </div>
   </nav>
 
-  <div class="top">
-    <div>
+  <div class="hero">
+    <div class="pitch">
       <h1>For your eyes <span>only.</span></h1>
       <p class="lede">SideEye is a privacy screen for your Mac. It blurs the display the moment you look away, walk away, or someone looks over your shoulder.</p>
+      <div class="actions">
+        <a class="button" data-link="download" href="#">Download for Mac</a>
+        <a class="textlink" data-link="github" href="#">View source</a>
+      </div>
+      <div class="try">
+        <div class="seg" role="group" aria-label="Who is in front of the camera">
+          <button id="modeAuto" aria-pressed="true">Simulated</button>
+          <button id="modeCursor" aria-pressed="false">My cursor</button>
+          <button id="modeCamera" aria-pressed="false"><i class="live"></i><span>My camera</span></button>
+        </div>
+        <div class="acts">
+          <button id="btnAway" aria-pressed="false">Walk away</button>
+          <button id="btnIntruder" aria-pressed="false">Someone behind you</button>
+        </div>
+      </div>
     </div>
-    <div class="actions">
-      <a class="textlink" data-link="github" href="#">View source</a>
-      <a class="button" data-link="download" href="#">Download for Mac</a>
-    </div>
-  </div>
 
-  <div id="stage">
-    <div class="toolbar">
-      <div class="seg" role="group" aria-label="Who is in front of the camera">
-        <button id="modeAuto" aria-pressed="true">Simulated</button>
-        <button id="modeCursor" aria-pressed="false">My cursor</button>
-        <button id="modeCamera" aria-pressed="false"><i class="live"></i>My camera</button>
-      </div>
-      <div class="acts">
-        <button id="btnAway" aria-pressed="false">Walk away</button>
-        <button id="btnIntruder" aria-pressed="false">Someone behind you</button>
-      </div>
-    </div>
+    <div id="stage">
     <div class="display" id="screen">
       <div class="menubar"><b>Mail</b><span>File</span><span>Edit</span><span>View</span><span>Mailbox</span><span>Message</span><svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span class="r">Tue 9:41 AM</span></div>
       <div class="mail">
@@ -239,17 +237,11 @@
       </div>
     </div>
 
-    <p class="note" id="hint"></p>
-  </div>
-
-  <section>
-    <div class="three">
-      <div><h2>Look away</h2><p>The blur follows your head, so the side you can still see stays readable.</p></div>
-      <div><h2>Walk away</h2><p>No face in front of the camera, no screen.</p></div>
-      <div><h2>Get side-eyed</h2><p>A second face behind you hides everything before they read a word.</p></div>
     </div>
-  </section>
+  </div>
+</div>
 
+<div class="wrap">
   <section id="film" hidden>
     <video controls playsinline preload="metadata" poster="demo-poster.jpg"><source src="demo.mp4" type="video/mp4"></video>
   </section>
@@ -259,8 +251,7 @@
   </section>
 
   <section>
-    <p class="big">Nothing leaves your Mac.</p>
-    <p class="after">No network code, no account, no recordings. It never sees your screen. It's open source, so you don't have to take our word for it.</p>
+    <p class="big">Nothing leaves your Mac. <span>No network code, no account, no recordings. It's open source, so you can check.</span></p>
   </section>
 
   <div class="end">
@@ -276,7 +267,7 @@
 </div>
 
 <script type="module">
-import { VERTICES, TRIANGLES } from "./face-model.js";
+import { drawHead, drawRoom, PEOPLE } from "./head.js";
 // ---- links: change these in one place -------------------------------------
 const GITHUB = "https://github.com/ishmael07/sideeye";
 const LINKS = { github: GITHUB, download: GITHUB + "/releases/latest", author: "https://github.com/ishmael07" };
@@ -300,12 +291,15 @@ const target = { yaw: 0, pitch: 0 };
 // What is drawn: coverage = how far the blur front has crossed, strength = how strong where covered.
 const drawn = { coverage: 0, strength: 0, tx: -1, ty: 0, sweeping: false };
 
+let awayActive = false;
 function decide() {
   if (!settings.enabled) return { level: 0, reason: "none" };
   if (pose.intruder && settings.intruder) return { level: 1, reason: "intruder" };
   if (!pose.present) return settings.absent ? { level: 1, reason: "absent" } : { level: 0, reason: "none" };
   const dev = Math.max(Math.abs(pose.yaw), Math.abs(pose.pitch) * PITCH_WEIGHT);
-  const level = settings.away ? clamp((dev - settings.comfort) / settings.fade, 0, 1) : 0;
+  const comfort = settings.comfort - (awayActive ? 2 : 0);              // hysteresis: the edge of the comfort zone doesn't chatter
+  const level = settings.away ? clamp((dev - comfort) / (settings.fade + settings.comfort - comfort), 0, 1) : 0;
+  awayActive = level > 0;
   if (level === 0) return { level: 0, reason: "none" };
   if (!settings.sweep) return { level, reason: "away" };
   const past = v => Math.sign(v) * Math.max(Math.abs(v) - DEADBAND, 0);
@@ -384,96 +378,8 @@ function syncControls() {
 }
 syncControls();
 
-// ---- camera preview ---------------------------------------------------------
-// A lit 3D head built on MediaPipe's canonical face model: the geometry face trackers fit
-// to real people. It shows someone being tracked without showing anyone in particular.
-const EYES = [[33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246],
-              [263, 249, 390, 373, 374, 380, 381, 382, 362, 398, 384, 385, 386, 387, 388, 466]];
-const BROWS = [[46, 53, 52, 65, 55], [276, 283, 282, 295, 285]];
-const LIPS = [61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 409, 270, 269, 267, 0, 37, 39, 40, 185];
-const COUNT = VERTICES.length / 3, PIVOT = [0, -1.5, -4.5], CAMERA = 58, LIGHT = [-0.36, 0.46, 0.81];
-const SKIN = [216, 209, 203], px = new Float32Array(COUNT), py = new Float32Array(COUNT), wx = new Float32Array(COUNT), wy = new Float32Array(COUNT), wz = new Float32Array(COUNT);
-const order = Array.from({ length: TRIANGLES.length / 3 }, (_, i) => i), depth = new Float32Array(order.length);
-const nx = new Float32Array(COUNT), ny = new Float32Array(COUNT), nz = new Float32Array(COUNT);
-let frontSign = 0;
-
-function place(person, x, y, z) {               // model space (cm) → rotated world space
-  x -= PIVOT[0]; y -= PIVOT[1]; z -= PIVOT[2];
-  const { cr, sr, cp, sp, cy, sy } = person;
-  const x1 = x * cr - y * sr, y1 = x * sr + y * cr;                      // roll
-  const y2 = y1 * cp - z * sp, z2 = y1 * sp + z * cp;                    // pitch (positive looks down)
-  return [x1 * cy + z2 * sy + PIVOT[0], y2 + PIVOT[1], -x1 * sy + z2 * cy + PIVOT[2]];   // yaw
-}
-const flat = (person, p) => { const k = person.scale * CAMERA / (CAMERA - p[2]); return [person.x + p[0] * k, person.y - p[1] * k]; };
-const tone = (rgb, light, alpha = 1) => `rgba(${rgb.map(c => Math.round(clamp(c * light, 0, 255))).join(",")},${alpha})`;
-
-function drawHead(ctx, person) {
-  const rad = Math.PI / 180, { scale, dim } = person;
-  // Mirrored like a selfie view: turning to your left moves the nose to the left of the picture.
-  Object.assign(person, { cr: Math.cos(person.roll * rad), sr: Math.sin(person.roll * rad), cp: Math.cos(person.pitch * rad), sp: Math.sin(person.pitch * rad), cy: Math.cos(-person.yaw * rad), sy: Math.sin(-person.yaw * rad) });
-  for (let i = 0; i < COUNT; i++) {
-    const p = place(person, VERTICES[i * 3] / 100, VERTICES[i * 3 + 1] / 100, VERTICES[i * 3 + 2] / 100);
-    wx[i] = p[0]; wy[i] = p[1]; wz[i] = p[2]; [px[i], py[i]] = flat(person, p);
-  }
-
-  // Shoulders, neck and the back of the skull sit behind the face.
-  const chest = flat(person, [0, -25, -6]), neckTop = flat(person, place(person, 0, -7.5, -4)), neckHalf = 4.9 * scale;
-  const shirt = ctx.createLinearGradient(0, chest[1] - 13 * scale, 0, chest[1] + 8 * scale);
-  shirt.addColorStop(0, tone([74, 80, 94], dim)); shirt.addColorStop(1, tone([40, 44, 54], dim));
-  ctx.fillStyle = shirt; ctx.beginPath(); ctx.ellipse(chest[0] + person.yaw * -0.04 * scale, chest[1] + person.breath, 25 * scale, 14 * scale, 0, 0, 6.283); ctx.fill();
-  const neck = ctx.createLinearGradient(neckTop[0] - neckHalf, 0, neckTop[0] + neckHalf, 0);
-  neck.addColorStop(0, tone(SKIN, 0.62 * dim)); neck.addColorStop(0.45, tone(SKIN, 0.5 * dim)); neck.addColorStop(1, tone(SKIN, 0.3 * dim));
-  ctx.fillStyle = neck; ctx.beginPath(); ctx.roundRect(neckTop[0] - neckHalf, neckTop[1], neckHalf * 2, chest[1] - 10 * scale - neckTop[1] + person.breath, neckHalf * 0.5); ctx.fill();
-  const skull = flat(person, place(person, 0, 1.6, -2.4)), rx = Math.hypot(7.9 * person.cy, 9.4 * person.sy) * scale, ry = 9.7 * scale;
-  const dome = ctx.createRadialGradient(skull[0] - rx * 0.35, skull[1] - ry * 0.45, ry * 0.1, skull[0], skull[1], ry * 1.15);
-  dome.addColorStop(0, tone(SKIN, 0.98 * dim)); dome.addColorStop(0.6, tone(SKIN, 0.66 * dim)); dome.addColorStop(1, tone(SKIN, 0.3 * dim));
-  ctx.fillStyle = dome; ctx.beginPath(); ctx.ellipse(skull[0], skull[1], rx, ry, -person.roll * rad, 0, 6.283); ctx.fill();
-
-  // The face: back-face culled, depth sorted, one flat-shaded triangle at a time.
-  if (!frontSign) { let sum = 0; for (let t = 0; t < order.length; t++) sum += Math.sign(area(t)); frontSign = Math.sign(sum) || 1; }
-  for (let t = 0; t < order.length; t++) depth[t] = wz[TRIANGLES[t * 3]] + wz[TRIANGLES[t * 3 + 1]] + wz[TRIANGLES[t * 3 + 2]];
-  order.sort((m, n) => depth[m] - depth[n]);
-  ctx.lineJoin = "round"; ctx.lineWidth = 0.7;
-  nx.fill(0); ny.fill(0); nz.fill(0);
-  for (let t = 0; t < order.length; t++) {          // vertex normals: area-weighted sum of the faces around each vertex
-    const a = TRIANGLES[t * 3], b = TRIANGLES[t * 3 + 1], c = TRIANGLES[t * 3 + 2], flip = area(t) * frontSign < 0 ? -1 : 1;
-    let fx = (wy[b] - wy[a]) * (wz[c] - wz[a]) - (wz[b] - wz[a]) * (wy[c] - wy[a]), fy = (wz[b] - wz[a]) * (wx[c] - wx[a]) - (wx[b] - wx[a]) * (wz[c] - wz[a]), fz = (wx[b] - wx[a]) * (wy[c] - wy[a]) - (wy[b] - wy[a]) * (wx[c] - wx[a]);
-    if (fz * flip < 0) { fx = -fx; fy = -fy; fz = -fz; }
-    for (const v of [a, b, c]) { nx[v] += fx; ny[v] += fy; nz[v] += fz; }
-  }
-  for (const t of order) {
-    if (area(t) * frontSign <= 0) continue;
-    const a = TRIANGLES[t * 3], b = TRIANGLES[t * 3 + 1], c = TRIANGLES[t * 3 + 2];
-    const sx = nx[a] + nx[b] + nx[c], sy = ny[a] + ny[b] + ny[c], sz = nz[a] + nz[b] + nz[c], len = Math.hypot(sx, sy, sz) || 1;
-    const lit = (0.32 + 0.7 * Math.max(0, (sx * LIGHT[0] + sy * LIGHT[1] + sz * LIGHT[2]) / len)) * dim;
-    ctx.fillStyle = ctx.strokeStyle = tone(SKIN, lit);
-    ctx.beginPath(); ctx.moveTo(px[a], py[a]); ctx.lineTo(px[b], py[b]); ctx.lineTo(px[c], py[c]); ctx.closePath(); ctx.fill(); ctx.stroke();
-  }
-  const trace = ids => { ctx.beginPath(); ids.forEach((id, i) => i ? ctx.lineTo(px[id], py[id]) : ctx.moveTo(px[id], py[id])); };
-  const facing = ids => { let sum = 0; ids.forEach((id, i) => { const j = ids[(i + 1) % ids.length]; sum += px[id] * py[j] - px[j] * py[id]; }); return Math.abs(sum) / 2; };
-
-  trace(LIPS); ctx.closePath(); ctx.fillStyle = tone([196, 164, 156], 0.82 * dim); ctx.fill();
-  ctx.lineCap = "round"; ctx.lineWidth = 0.62 * scale; ctx.strokeStyle = tone([92, 80, 72], dim);
-  for (const brow of BROWS) { trace(brow); ctx.stroke(); }
-  for (const eye of EYES) {
-    if (facing(eye) < 0.55 * scale * scale) continue;                      // turned out of sight
-    const cx = eye.reduce((n, id) => n + px[id], 0) / eye.length, cy = eye.reduce((n, id) => n + py[id], 0) / eye.length;
-    ctx.save(); trace(eye); ctx.closePath();
-    if (person.blink > 0.5) { ctx.fillStyle = tone(SKIN, 0.62 * dim); ctx.fill(); ctx.restore(); continue; }
-    ctx.fillStyle = tone([238, 238, 242], 0.92 * dim); ctx.fill(); ctx.clip();
-    const ix = cx + person.gazeX * 0.75 * scale, iy = cy + person.gazeY * 0.4 * scale, r = 0.66 * scale;
-    ctx.fillStyle = tone([72, 54, 42], dim); ctx.beginPath(); ctx.ellipse(ix, iy, r * Math.max(0.55, Math.abs(person.cy)), r, 0, 0, 6.283); ctx.fill();
-    ctx.fillStyle = "#0b0b0d"; ctx.beginPath(); ctx.arc(ix, iy, r * 0.46, 0, 6.283); ctx.fill();
-    ctx.fillStyle = `rgba(255,255,255,${0.85 * dim})`; ctx.beginPath(); ctx.arc(ix - r * 0.32, iy - r * 0.34, r * 0.17, 0, 6.283); ctx.fill();
-    ctx.restore();
-    ctx.lineWidth = 0.16 * scale; ctx.strokeStyle = tone([70, 58, 52], dim); trace(eye.slice(8).concat(eye[0])); ctx.stroke();   // upper lash line
-  }
-  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
-  for (let i = 0; i < COUNT; i++) { x0 = Math.min(x0, px[i]); x1 = Math.max(x1, px[i]); y0 = Math.min(y0, py[i]); y1 = Math.max(y1, py[i]); }
-  return [x0, y0, x1 - x0, y1 - y0];
-}
-function area(t) { const a = TRIANGLES[t * 3], b = TRIANGLES[t * 3 + 1], c = TRIANGLES[t * 3 + 2]; return (px[b] - px[a]) * (py[c] - py[a]) - (px[c] - px[a]) * (py[b] - py[a]); }
-
+// ---- camera preview: a simulated person (see head.js), or your own video in camera mode ----
+const layer = document.createElement("canvas");
 const meshCanvas = $("mesh"), boxCanvas = $("boxes"), shown = { me: 1, them: 0 }, life = { t: 0, blinkAt: 2.4, blink: 0 };
 function drawPreview(dt) {
   const k = 1 - Math.exp(-dt / 0.22);
@@ -485,25 +391,23 @@ function drawPreview(dt) {
   const ctx = meshCanvas.getContext("2d"); ctx.clearRect(0, 0, w, h);
   if (camera.on || !settings.enabled || !w) return;
 
-  // A dim room: wall, a soft window, a shelf edge. Enough to read as a webcam picture.
-  const wall = ctx.createLinearGradient(0, 0, w, h); wall.addColorStop(0, "#2c2f37"); wall.addColorStop(1, "#121317"); ctx.fillStyle = wall; ctx.fillRect(0, 0, w, h);
-  const windowGlow = ctx.createRadialGradient(w * 0.14, h * 0.2, 0, w * 0.14, h * 0.2, w * 0.42);
-  windowGlow.addColorStop(0, "rgba(190,205,235,.34)"); windowGlow.addColorStop(1, "rgba(190,205,235,0)"); ctx.fillStyle = windowGlow; ctx.fillRect(0, 0, w, h);
-  ctx.fillStyle = "rgba(0,0,0,.22)"; ctx.fillRect(w * 0.66, h * 0.3, w * 0.34, h * 0.035);
-
+  if (layer.width !== w || layer.height !== h) { layer.width = w; layer.height = h; }
+  const room = ctx, people = layer.getContext("2d"); people.clearRect(0, 0, w, h);
+  drawRoom(room, w, h);
   const t = life.t, unit = h / 100, boxes = [];
   if (shown.them > 0.01) {                         // the side-eyer leans in from behind your shoulder
     const lean = 1 - shown.them, them = { x: w * (0.77 + 0.38 * lean), y: h * (0.33 + 0.05 * lean) + Math.sin(t * 1.9) * unit * 0.5, scale: unit * 1.3, dim: 0.6,
-      yaw: -22 + 30 * lean + Math.sin(t * 0.8) * 2, pitch: 7, roll: -5 + 8 * lean, gazeX: 0.5, gazeY: 0.25, blink: 0, breath: 0 };
-    ctx.globalAlpha = Math.min(1, shown.them * 1.6); boxes.push([drawHead(ctx, them), "rgb(255,69,58)", shown.them]); ctx.globalAlpha = 1;
+      yaw: -22 + 30 * lean + Math.sin(t * 0.8) * 2, pitch: 7, roll: -5 + 8 * lean, gazeX: 0.5, gazeY: 0.25, blink: 0, breath: 0, ...PEOPLE.them };
+    people.globalAlpha = Math.min(1, shown.them * 1.6); boxes.push([drawHead(people, them), "rgb(255,69,58)", shown.them]); people.globalAlpha = 1;
   }
   if (shown.me > 0.01) {
     const gone = 1 - shown.me, lead = clamp((target.yaw - pose.yaw) / 22, -1, 1), leadY = clamp((target.pitch - pose.pitch) / 18, -1, 1);
     const me = { x: w * (0.45 - 1.2 * gone * gone), y: h * 0.46 + Math.sin(t * 1.1) * unit * 0.35, scale: unit * 2.7, dim: 1,
       yaw: pose.yaw + 1.5 * Math.sin(t * 0.63) + 0.8 * Math.sin(t * 1.37 + 1) + 60 * gone, pitch: pose.pitch + 1.1 * Math.sin(t * 0.81 + 2), roll: -pose.yaw * 0.07 + 0.9 * Math.sin(t * 0.47),
-      gazeX: clamp(-(pose.yaw / 38) - lead * 0.8, -1, 1), gazeY: clamp(pose.pitch / 30 + leadY * 0.7, -1, 1), blink: life.blink, breath: Math.sin(t * 1.5) * unit * 0.5 };
-    boxes.push([drawHead(ctx, me), "rgb(48,209,88)", shown.me]);
+      gazeX: clamp(-(pose.yaw / 38) - lead * 0.8, -1, 1), gazeY: clamp(pose.pitch / 30 + leadY * 0.7, -1, 1), blink: life.blink, breath: Math.sin(t * 1.5) * unit * 0.5, ...PEOPLE.me };
+    boxes.push([drawHead(people, me), "rgb(48,209,88)", shown.me]);
   }
+  ctx.filter = `blur(${(0.55 * dpr).toFixed(2)}px)`; ctx.drawImage(layer, 0, 0); ctx.filter = "none";   // webcams are soft; this also melts the facets
   const vignette = ctx.createRadialGradient(w / 2, h / 2, h * 0.35, w / 2, h / 2, w * 0.75);
   vignette.addColorStop(0, "rgba(0,0,0,0)"); vignette.addColorStop(1, "rgba(0,0,0,.45)"); ctx.fillStyle = vignette; ctx.fillRect(0, 0, w, h);
   ctx.lineWidth = Math.max(1.5, w / 190);
@@ -519,13 +423,9 @@ const SCRIPT = [ // [seconds, yaw, pitch, present, intruder]
   [3.0, 0, 0, 1, 1], [1.8, 0, 0, 1, 0], [2.8, 0, 0, 0, 0], [1.6, 0, 0, 1, 0],
 ];
 const SCRIPT_LENGTH = SCRIPT.reduce((n, step) => n + step[0], 0);
-const HINTS = {
-  auto: "A simulated person is at the desk. Take over with your cursor or your own camera.",
-  cursor: "Your cursor is your eyes. Move it off the screen to look away.",
-  camera: "That's you. Look away, step out of frame, or get someone to stand behind you. The video never leaves this tab.",
-  touch: "A simulated person is at the desk. Try the buttons, or use your own camera.",
-};
-const touch = matchMedia("(pointer: coarse)").matches, velocity = { yaw: 0, pitch: 0 };
+const velocity = { yaw: 0, pitch: 0 };
+// Measured with dev/test-camera.sh: a 42° left turn reads +30° and looking down reads negative, hence the gain and the flip.
+const YAW_SIGN = 1.2, PITCH_SIGN = -1.2;
 let mode = "auto", scriptTime = 0, lastPointer = 0, override = null, calibrating = false;
 const camera = { on: false };
 const frozen = params.get("state");   // ?state=left|right|down|intruder|away|clear for stills
@@ -534,7 +434,7 @@ function setMode(next) {
   if (camera.on && next !== "camera") camera.stop();
   mode = next; scriptTime = 0;
   for (const [id, name] of [["modeAuto", "auto"], ["modeCursor", "cursor"], ["modeCamera", "camera"]]) $(id).setAttribute("aria-pressed", mode === name);
-  $("hint").textContent = HINTS[mode === "auto" && touch ? "touch" : mode];
+
   if (!override && mode !== "camera") { pose.present = true; pose.intruder = false; }
 }
 $("modeAuto").onclick = () => setMode("auto");
@@ -554,7 +454,7 @@ addEventListener("pointermove", e => {
   const r = screen.getBoundingClientRect(), over = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
   if (mode === "auto") { if (!over) return; setMode("cursor"); }       // touching the screen takes over from the simulation
   lastPointer = performance.now();
-  if (e.target.closest?.(".toolbar, nav, .top")) { target.yaw = target.pitch = 0; return; }   // reaching for a button isn't looking away
+  if (e.target.closest?.("button, a, .try")) { target.yaw = target.pitch = 0; return; }   // reaching for a control isn't looking away
   const axis = (pos, lo, size) => {                      // on the screen: a relaxed glance. Off it: a real turn.
     const n = (pos - lo - size / 2) / (size / 2);
     return Math.abs(n) <= 1 ? n * 11 : Math.sign(n) * (11 + (Math.abs(n) - 1) * size / 2 / 3.2);
@@ -573,10 +473,10 @@ function pulse(kind, ms, el) {
 $("btnIntruder").onclick = e => pulse("intruder", 3200, e.currentTarget);
 $("btnAway").onclick = e => pulse("away", 3200, e.currentTarget);
 
-// Real face tracking in the browser (MediaPipe, on-device). Yaw/pitch come from where the
-// nose sits between the cheeks / brow and chin, so the signs can't be mirrored by accident.
+// Real face tracking in the browser (MediaPipe, on-device). Head angles come from the tracker's
+// rotation matrix; dev/test-camera.sh checks their signs and scale against a synthetic feed.
 $("modeCamera").onclick = async () => {
-  const btn = $("modeCamera"), video = $("video"), label = btn.lastChild;
+  const btn = $("modeCamera"), video = $("video"), label = btn.querySelector("span");
   if (camera.on) { setMode("auto"); return; }
   if (camera.starting) return;
   try {
@@ -585,25 +485,26 @@ $("modeCamera").onclick = async () => {
     const files = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
     const tracker = await FaceLandmarker.createFromOptions(files, {
       baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task", delegate: "GPU" },
-      runningMode: "VIDEO", numFaces: 3,
+      runningMode: "VIDEO", numFaces: 3, outputFacialTransformationMatrixes: true,
     });
     const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: "user" } });
     video.srcObject = stream; await video.play();
-    let base = null, samples = [], lost = 0, seen = 0, lastTime = -1;
+    let base = null, lost = 0, seen = 0, lastRun = 0, smooth = null, steadySince = 0;
 
     camera.stop = () => {
       camera.on = false; calibrating = false; stream.getTracks().forEach(track => track.stop()); tracker.close();
       video.style.display = "none"; boxCanvas.getContext("2d").clearRect(0, 0, boxCanvas.width, boxCanvas.height);
     };
     camera.step = () => {
-      if (video.currentTime === lastTime) return; lastTime = video.currentTime;
-      const faces = tracker.detectForVideo(video, performance.now()).faceLandmarks.map(p => {
+      const now = performance.now(); if (now - lastRun < 48 || video.readyState < 2) return;       // ~20 detections a second keeps the page smooth
+      const since = Math.min((now - lastRun) / 1000, 0.2); lastRun = now;
+      const result = tracker.detectForVideo(video, now);
+      const faces = result.faceLandmarks.map((p, i) => {
         const xs = p.map(q => q.x), ys = p.map(q => q.y);
         const box = [Math.min(...xs), Math.min(...ys), Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)], area = box[2] * box[3];
-        const midX = (p[234].x + p[454].x) / 2, halfW = Math.abs(p[454].x - p[234].x) / 2;
-        const midY = (p[10].y + p[152].y) / 2, halfH = Math.abs(p[152].y - p[10].y) / 2;
-        // Unmirrored frame: turning to your own left moves the nose toward image-right.
-        return { area, box, yaw: clamp((p[1].x - midX) / halfW, -1, 1) * 62, pitch: clamp((p[1].y - midY) / halfH, -1, 1) * 70 };
+        // Column-major 4x4; its third column is the way the face points, in camera space.
+        const m = result.facialTransformationMatrixes[i]?.data ?? [], deg = 180 / Math.PI;
+        return { area, box, yaw: YAW_SIGN * Math.atan2(m[8], m[10]) * deg, pitch: PITCH_SIGN * Math.asin(clamp(m[9], -1, 1)) * deg };
       }).sort((a, b) => b.area - a.area);
 
       const ctx = boxCanvas.getContext("2d"), w = boxCanvas.width, h = boxCanvas.height;
@@ -617,16 +518,19 @@ $("modeCamera").onclick = async () => {
       if (!faces.length) lost++; else lost = 0;
       if (!override) { pose.intruder = seen > 4; pose.present = lost <= 8; }
       if (!faces.length) return;
-      const me = faces[0];
-      if (!base) {                                        // calibrate on ~1s of steady pose
-        samples.push(me); if (samples.length > 25) samples.shift();
-        const spread = key => Math.max(...samples.map(f => f[key])) - Math.min(...samples.map(f => f[key]));
-        if (samples.length === 25 && spread("yaw") < 8 && spread("pitch") < 10)
-          base = { yaw: samples.reduce((n, f) => n + f.yaw, 0) / 25, pitch: samples.reduce((n, f) => n + f.pitch, 0) / 25 };
-        calibrating = !base; $("status").textContent = "Calibrating · look at your screen";
-        target.yaw = target.pitch = 0; return;
+      const blend = smooth ? 1 - Math.exp(-since / 0.11) : 1;                  // landmark jitter would make the blur shimmer
+      smooth = smooth ? { yaw: smooth.yaw + (faces[0].yaw - smooth.yaw) * blend, pitch: smooth.pitch + (faces[0].pitch - smooth.pitch) * blend } : { yaw: faces[0].yaw, pitch: faces[0].pitch };
+      const me = smooth;
+      // The camera sits on the screen, so facing it is yaw 0. Pitch depends on how high the camera is, so that
+      // baseline is taken from the first steady second. Both then follow slow posture changes while the screen is clear.
+      if (!base) {
+        if (!steadySince || Math.abs(me.pitch - steadySince.pitch) > 6) steadySince = { at: now, pitch: me.pitch };
+        calibrating = now - steadySince.at < 900;
+        if (calibrating) { $("status").textContent = "Calibrating · look at your screen"; target.yaw = target.pitch = 0; return; }
+        base = { yaw: 0, pitch: me.pitch };
       }
-      target.yaw = me.yaw - base.yaw; target.pitch = me.pitch - base.pitch;
+      if (lastOut.level === 0) { const drift = 1 - Math.exp(-since / 8); base.yaw += (me.yaw - base.yaw) * drift; base.pitch += (me.pitch - base.pitch) * drift; }
+      target.yaw = me.yaw - base.yaw; target.pitch = me.pitch - base.pitch;      target.yaw = me.yaw - base.yaw; target.pitch = me.pitch - base.pitch;
     };
     video.style.display = "block"; camera.on = true;
     settings.enabled = true; $("swEnabled").setAttribute("aria-checked", "true"); syncControls();
@@ -634,15 +538,16 @@ $("modeCamera").onclick = async () => {
   } catch (err) {
     console.error(err);
     setMode("auto");
-    $("hint").textContent = err.name === "NotAllowedError" ? "Camera access was blocked, so the simulation is back on. You can allow it from the address bar."
-      : "Face tracking couldn't start in this browser, so the simulation is back on.";
-  } finally { camera.starting = false; label.textContent = "My camera"; }
+    label.textContent = err.name === "NotAllowedError" ? "Camera blocked" : "Camera unavailable";
+    setTimeout(() => { label.textContent = "My camera"; }, 3500);
+    return;
+  } finally { camera.starting = false; if (label.textContent === "Starting…") label.textContent = "My camera"; }
 };
 setMode("auto");
 if (params.has("camera")) $("modeCamera").click();
 
 const STILLS = { left: [29, 0, 1, 0], right: [-29, 0, 1, 0], down: [0, 27, 1, 0], intruder: [0, 0, 1, 1], away: [0, 0, 0, 0], clear: [0, 0, 1, 0] };
-let last = performance.now();
+let last = performance.now(), lastOut = { level: 0, reason: "none" };
 function frame(now) {
   const dt = Math.min((now - last) / 1000, 0.05); last = now;
   if (frozen && STILLS[frozen]) { [target.yaw, target.pitch] = STILLS[frozen]; pose.present = !!STILLS[frozen][2]; pose.intruder = !!STILLS[frozen][3]; }
@@ -652,16 +557,17 @@ function frame(now) {
 
   // A critically damped spring, so the head accelerates and settles like a neck does.
   // The simulation moves at a human pace; your cursor and your camera are followed tightly.
-  const stiffness = mode === "auto" ? 7.5 : mode === "cursor" ? 13 : 24;
+  const stiffness = mode === "auto" ? 7.5 : mode === "cursor" ? 13 : 16;
   for (const axis of ["yaw", "pitch"]) {
     velocity[axis] += (-2 * stiffness * velocity[axis] - stiffness * stiffness * (pose[axis] - target[axis])) * dt;
     pose[axis] += velocity[axis] * dt;
   }
   if (frozen) { pose.yaw = target.yaw; pose.pitch = target.pitch; }     // stills snap to their final pose
-  render(decide(), frozen ? 1 : dt); drawPreview(frozen ? 1 : dt);
+  lastOut = decide(); render(lastOut, frozen ? 1 : dt); drawPreview(frozen ? 1 : dt);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+if (params.has("trace")) setInterval(() => { const out = lastOut; console.log("TRACE " + JSON.stringify({ mode, yaw: +pose.yaw.toFixed(1), pitch: +pose.pitch.toFixed(1), present: pose.present, intruder: pose.intruder, level: +out.level.toFixed(2), reason: out.reason, toward: out.toward?.map(v => +v.toFixed(2)), faces: $("count").textContent, status: $("status").textContent })); }, 100);
 </script>
 </body>
 </html>
