@@ -81,13 +81,30 @@ private func me(yaw: Double = 0, pitch: Double = 0) -> FaceSample {
         #expect(spike.level < 1)
     }
 
-    @Test func pitchCountsLessThanYaw() {
+    @Test func pitchCountsMoreThanYaw() {
         var e = calibrated(); var t = 0.0
         run(&e, clock: &t, faces: [me()], seconds: 0.5)
-        let down = run(&e, clock: &t, faces: [me(pitch: 20)], seconds: 1)
-        #expect(down.level == 0) // 20° × 0.6 = 12° < 15°
-        let wayDown = run(&e, clock: &t, faces: [me(pitch: 55)], seconds: 1)
-        #expect(wayDown.level == 1)
+        let glance = run(&e, clock: &t, faces: [me(pitch: 10)], seconds: 1)
+        #expect(glance.level == 0) // 10° × 1.3 = 13° < 15°
+        let chinToChest = run(&e, clock: &t, faces: [me(pitch: 35)], seconds: 1)
+        #expect(chinToChest.level == 1) // a full nod is as "away" as a far turn
+    }
+
+    @Test func tiltingTowardAShoulderIsNotLookingAway() {
+        var e = calibrated(); var t = 0.0
+        run(&e, clock: &t, faces: [me()], seconds: 0.5)
+        // What Vision reports for a 24° tilt while still facing the screen.
+        let tilted = FaceSample(yaw: -28, pitch: 0, area: 0.12, roll: 24)
+        let out = run(&e, clock: &t, faces: [tilted], seconds: 1)
+        #expect(out.level == 0)
+    }
+
+    @Test func aRealTurnWithIncidentalRollStillShields() {
+        var e = calibrated(); var t = 0.0
+        run(&e, clock: &t, faces: [me()], seconds: 0.5)
+        let turned = FaceSample(yaw: -50, pitch: 0, area: 0.12, roll: 8)
+        let out = run(&e, clock: &t, faces: [turned], seconds: 1)
+        #expect(out.level == 1)
     }
 
     @Test func recenterAdoptsCurrentPose() {
@@ -283,7 +300,7 @@ private let down = ShieldEngine.downTiltPitchSign
 
     @Test func lookingDownKeepsTheBottomReadable() throws {
         var e = calibrated(); var t = 0.0
-        let out = run(&e, clock: &t, faces: [me(pitch: down * 40)], seconds: 1)
+        let out = run(&e, clock: &t, faces: [me(pitch: down * 25)], seconds: 1)
         #expect(out.level > 0)
         let toward = try #require(out.sweepToward)
         #expect(toward.dy < -0.99)
@@ -292,13 +309,13 @@ private let down = ShieldEngine.downTiltPitchSign
 
     @Test func lookingUpKeepsTheTopReadable() throws {
         var e = calibrated(); var t = 0.0
-        let out = run(&e, clock: &t, faces: [me(pitch: down * -40)], seconds: 1)
+        let out = run(&e, clock: &t, faces: [me(pitch: down * -25)], seconds: 1)
         #expect(try #require(out.sweepToward).dy > 0.99)
     }
 
     @Test func diagonalGlanceSweepsDiagonally() throws {
         var e = calibrated(); var t = 0.0
-        let out = run(&e, clock: &t, faces: [me(yaw: left * 30, pitch: down * 45)], seconds: 1)
+        let out = run(&e, clock: &t, faces: [me(yaw: left * 30, pitch: down * 25)], seconds: 1)
         let toward = try #require(out.sweepToward)
         #expect(toward.dx < -0.3 && toward.dy < -0.3)
         #expect(abs(toward.dx * toward.dx + toward.dy * toward.dy - 1) < 1e-9)
@@ -306,7 +323,7 @@ private let down = ShieldEngine.downTiltPitchSign
 
     @Test func smallOffAxisWobbleDoesNotTiltTheSweep() throws {
         var e = calibrated(); var t = 0.0
-        let out = run(&e, clock: &t, faces: [me(yaw: left * 25, pitch: 6)], seconds: 1)
+        let out = run(&e, clock: &t, faces: [me(yaw: left * 25, pitch: 5)], seconds: 1)
         #expect(try #require(out.sweepToward).dy == 0)
     }
 
@@ -367,9 +384,9 @@ private let down = ShieldEngine.downTiltPitchSign
 @Suite struct Drift {
     @Test func centerFollowsSlowPostureChange() {
         var e = calibrated(); var t = 0.0
-        run(&e, clock: &t, faces: [me(yaw: 9, pitch: 12)], seconds: 300)
+        run(&e, clock: &t, faces: [me(yaw: 9, pitch: 8)], seconds: 300)
         #expect(abs((e.center?.yaw ?? 0) - 9) < 1)
-        #expect(abs((e.center?.pitch ?? 0) - 12) < 1.5)
+        #expect(abs((e.center?.pitch ?? 0) - 8) < 1)
     }
 
     @Test func aGlanceBarelyMovesTheCenter() {

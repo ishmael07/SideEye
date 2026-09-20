@@ -80,7 +80,7 @@ final class AppModel: ObservableObject {
         self.faces = faces
         self.output = output
         if let log {
-            let poses = faces.map { String(format: "(yaw %.1f pitch %.1f roll %.1f area %.4f x %.3f y %.3f)", $0.sample.yaw, $0.sample.pitch, $0.roll, $0.sample.area, $0.box.midX, $0.box.midY) }
+            let poses = faces.map { String(format: "(yaw %.1f pitch %.1f roll %.1f area %.4f x %.3f y %.3f)", $0.sample.yaw, $0.sample.pitch, $0.sample.roll, $0.sample.area, $0.box.midX, $0.box.midY) }
             let line = String(format: "%.2f level %.2f %@ ", time, output.level, output.reason.rawValue) + (output.sweepToward.map { String(format: "toward(%.2f,%.2f) ", $0.dx, $0.dy) } ?? "") + poses.joined(separator: " ") + "\n"
             log.write(Data(line.utf8))
         }

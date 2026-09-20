@@ -46,10 +46,12 @@ final class ShieldController {
     private let attackTau = 0.09
     private let releaseTau = 0.18
     private let turnTau = 0.15
-    /// Width of the soft blur front, as a fraction of the distance it travels.
-    private let frontWidth = 0.3
-    /// Dimming at full strength; kills bright leftovers a blur alone lets through.
-    private let fullTint: Float = 0.28
+    /// Width of the fade, as a fraction of the distance the front travels. Wide on
+    /// purpose: the shield should read as the screen fading to dark, not a moving edge.
+    private let frontWidth = 0.55
+    /// The visible part of the shield is a fade to near-black; the blur underneath is the
+    /// privacy backstop for the part of the fade that is still see-through.
+    private let fullTint: Float = 0.8
 
     init() {
         NotificationCenter.default.addObserver(
@@ -182,9 +184,11 @@ final class ShieldController {
         func point(at distance: Double) -> CGPoint {
             CGPoint(x: width / 2 + away.x * distance, y: height / 2 + away.y * distance)
         }
-        // Ease-in ramp: stays near zero close to the readable side so text there is untouched.
-        let stops: [CGFloat] = [0, 0.2, 0.4, 0.6, 0.8, 1]
-        let colors = stops.map { CGColor(red: 0, green: 0, blue: 0, alpha: pow($0, 1.8)) } as CFArray
+        // Smootherstep: zero slope at both ends, so the fade has no visible start or end line.
+        let stops: [CGFloat] = (0...12).map { CGFloat($0) / 12 }
+        let colors = stops.map { t in
+            CGColor(red: 0, green: 0, blue: 0, alpha: t * t * t * (t * (t * 6 - 15) + 10))
+        } as CFArray
         guard let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: colors, locations: stops) else { return nil }
         context.drawLinearGradient(gradient, start: point(at: start), end: point(at: start + band), options: [.drawsAfterEndLocation])
         return context.makeImage()

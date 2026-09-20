@@ -6,11 +6,14 @@ public struct FaceSample: Equatable, Sendable {
     public var yaw: Double
     public var pitch: Double
     public var area: Double
+    /// Head tilt toward a shoulder.
+    public var roll: Double
 
-    public init(yaw: Double, pitch: Double, area: Double) {
+    public init(yaw: Double, pitch: Double, area: Double, roll: Double = 0) {
         self.yaw = yaw
         self.pitch = pitch
         self.area = area
+        self.roll = roll
     }
 }
 
@@ -21,8 +24,13 @@ public struct ShieldConfig: Equatable, Sendable {
     public var fullAngle = 30.0
     /// Once shielded, the comfort threshold shrinks by this much so the edge doesn't chatter.
     public var hysteresis = 2.0
-    /// Pitch is noisier than yaw and glancing at the keyboard is normal, so it counts for less.
-    public var pitchWeight = 0.6
+    /// A neck pitches about half as far as it turns (chin-to-chest is ~35°), so a degree
+    /// of pitch counts for more than a degree of yaw.
+    public var pitchWeight = 1.3
+    /// Vision reports phantom yaw when the head tilts toward a shoulder (measured: roughly
+    /// -1.3° of yaw per degree of roll). Roll past the deadband is added back, conservatively.
+    public var rollYawCompensation = 1.0
+    public var rollDeadband = 6.0
     /// 1€ filter on the head pose: heavy smoothing while the head is still (kills tracking
     /// jitter), light smoothing while it moves (keeps the blur in step with a real turn).
     public var smoothingMinCutoff = 1.2
@@ -202,8 +210,10 @@ public struct ShieldEngine: Sendable {
             pitchFilter = OneEuroFilter()
         }
         // Median of 3 drops single-frame outliers before the 1€ filter sees them.
+        let tilt = face.roll.sign == .minus ? min(face.roll + config.rollDeadband, 0) : max(face.roll - config.rollDeadband, 0)
+        let yaw = face.yaw + config.rollYawCompensation * tilt
         let pose = HeadPose(
-            yaw: yawFilter.filter(median3(&recentYaw, face.yaw), dt: dt, minCutoff: config.smoothingMinCutoff, beta: config.smoothingBeta),
+            yaw: yawFilter.filter(median3(&recentYaw, yaw), dt: dt, minCutoff: config.smoothingMinCutoff, beta: config.smoothingBeta),
             pitch: pitchFilter.filter(median3(&recentPitch, face.pitch), dt: dt, minCutoff: config.smoothingMinCutoff, beta: config.smoothingBeta)
         )
         smoothed = pose
