@@ -19,8 +19,8 @@ final class CameraTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
     private let videoQueue = DispatchQueue(label: "sideeye.video", qos: .userInitiated)
     private var configured = false
     private var lastAnalysed: TimeInterval = 0
-    // Just under 2 camera frames (30 fps source) so jitter doesn't drop us to every third frame.
-    private let minFrameInterval = 0.06
+    // Every camera frame (30 fps source): tracking latency is what makes the blur feel slow.
+    private let minFrameInterval = 0.025
     private let minConfidence: Float = 0.5
 
     static func requestAccess(_ completion: @escaping (Bool) -> Void) {

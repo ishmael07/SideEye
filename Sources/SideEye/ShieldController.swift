@@ -43,15 +43,13 @@ final class ShieldController {
     private var sweeping = false
 
     // Shield comes up fast (privacy), clears a little slower (comfort).
-    private let attackTau = 0.09
-    private let releaseTau = 0.18
-    private let turnTau = 0.15
-    /// Width of the fade, as a fraction of the distance the front travels. Wide on
-    /// purpose: the shield should read as the screen fading to dark, not a moving edge.
-    private let frontWidth = 0.55
-    /// The visible part of the shield is a fade to near-black; the blur underneath is the
-    /// privacy backstop for the part of the fade that is still see-through.
-    private let fullTint: Float = 0.8
+    private let attackTau = 0.04
+    private let releaseTau = 0.07
+    private let turnTau = 0.1
+    /// Width of the soft blur front, as a fraction of the distance it travels.
+    private let frontWidth = 0.45
+    /// The blur is the shield; the light dimming only kills bright leftovers it lets through.
+    private let fullTint: Float = 0.35
 
     init() {
         NotificationCenter.default.addObserver(

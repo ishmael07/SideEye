@@ -34,7 +34,7 @@ public struct ShieldConfig: Equatable, Sendable {
     /// 1€ filter on the head pose: heavy smoothing while the head is still (kills tracking
     /// jitter), light smoothing while it moves (keeps the blur in step with a real turn).
     public var smoothingMinCutoff = 1.2
-    public var smoothingBeta = 0.02
+    public var smoothingBeta = 0.06
     /// Offsets on the minor axis below this many degrees don't tilt a sweep; pitch noise
     /// would otherwise make a sideways sweep wobble.
     public var sweepAxisDeadband = 8.0
