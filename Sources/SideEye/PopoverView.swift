@@ -110,8 +110,10 @@ struct PopoverView: View {
 
     private var sliders: some View {
         VStack(alignment: .leading, spacing: 10) {
+            TriggerRow(symbol: "rectangle.righthalf.inset.filled", title: "Blur sweeps in as I turn", isOn: $settings.directionalBlur)
+                .help("On: the side of the screen you're still turned toward stays readable until you've turned all the way. Off: the whole screen fades at once.")
             LabeledSlider(title: "Comfort zone", value: $settings.comfortZone, range: 5...30, unit: "°")
-            LabeledSlider(title: "Fade distance", value: $settings.fadeDistance, range: 3...30, unit: "°")
+            LabeledSlider(title: "Fade distance", value: $settings.fadeDistance, range: 5...60, unit: "°")
             LabeledSlider(title: "Blur strength", value: $settings.blurStrength, range: 16...90, unit: "")
         }
     }

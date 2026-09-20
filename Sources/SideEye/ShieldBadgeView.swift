@@ -7,8 +7,8 @@ struct ShieldBadgeView: View {
 
     var body: some View {
         let reason = presentation.reason
-        // Stay out of the way during a partial blur; appear once the screen is mostly hidden.
-        let visibility = smoothstep(presentation.level, from: 0.55, to: 0.95)
+        // Stay out of the way while part of the screen is still readable.
+        let visibility = smoothstep(presentation.level, from: 0.8, to: 0.98)
 
         VStack(spacing: 14) {
             Image(systemName: symbol(for: reason))

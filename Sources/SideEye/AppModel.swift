@@ -76,17 +76,15 @@ final class AppModel: ObservableObject {
 
     private func handle(_ faces: [DetectedFace], at time: TimeInterval) {
         guard settings.enabled, !suspended else { return }
-        let hadCenter = engine.center != nil
         let output = engine.process(faces: faces.map(\.sample), at: time)
-        if !hadCenter, let center = engine.center { settings.savedCenter = center }
         self.faces = faces
         self.output = output
         if let log {
-            let poses = faces.map { String(format: "(yaw %.1f pitch %.1f area %.4f)", $0.sample.yaw, $0.sample.pitch, $0.sample.area) }
-            let line = String(format: "%.2f level %.2f %@ ", time, output.level, output.reason.rawValue) + poses.joined(separator: " ") + "\n"
+            let poses = faces.map { String(format: "(yaw %.1f pitch %.1f roll %.1f area %.4f x %.3f y %.3f)", $0.sample.yaw, $0.sample.pitch, $0.roll, $0.sample.area, $0.box.midX, $0.box.midY) }
+            let line = String(format: "%.2f level %.2f %@ ", time, output.level, output.reason.rawValue) + (output.sweepToward.map { String(format: "toward(%.2f,%.2f) ", $0.dx, $0.dy) } ?? "") + poses.joined(separator: " ") + "\n"
             log.write(Data(line.utf8))
         }
-        shield.setTarget(level: output.level, reason: output.reason)
+        shield.setTarget(level: output.level, reason: output.reason, sweepToward: output.sweepToward)
     }
 
     private func settingsChanged() {
@@ -100,8 +98,9 @@ final class AppModel: ObservableObject {
             shield.clear()
             output = .clear
             faces = []
-            // Fresh timing state so resuming doesn't read the pause as an absence.
-            engine = ShieldEngine(config: settings.engineConfig, center: engine.center)
+            // Fresh timing state so resuming doesn't read the pause as an absence, and a
+            // fresh auto-calibration: posture after a break is rarely the same as before it.
+            engine = ShieldEngine(config: settings.engineConfig, center: settings.savedCenter)
         }
     }
 }

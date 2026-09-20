@@ -83,17 +83,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// `--demo`: sweeps the shield through each reason without touching the camera.
     private func runDemo() {
-        let steps: [(Double, Double, ShieldReason)] = [
-            (1.0, 0.5, .lookingAway), (3.0, 1.0, .lookingAway), (5.5, 0, .none),
-            (7.0, 1.0, .intruder), (9.5, 0, .none),
-            (11.0, 1.0, .absent), (13.5, 0, .none),
+        let left = SweepDirection(dx: -1, dy: 0)
+        let down = SweepDirection(dx: 0, dy: -1)
+        let upRight = SweepDirection(dx: 0.7071, dy: 0.7071)
+        let steps: [(Double, Double, ShieldReason, SweepDirection?)] = [
+            (1.0, 0.35, .lookingAway, left), (2.5, 0.7, .lookingAway, left), (4.0, 1.0, .lookingAway, left),
+            (5.5, 0, .none, nil),
+            (7.0, 0.5, .lookingAway, down), (8.5, 0, .none, nil),
+            (10.0, 0.5, .lookingAway, upRight), (11.5, 0, .none, nil),
+            (13.0, 1.0, .intruder, nil), (15.0, 0, .none, nil),
+            (16.5, 1.0, .absent, nil), (18.5, 0, .none, nil),
         ]
-        for (delay, level, reason) in steps {
+        for (delay, level, reason, toward) in steps {
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [model] in
-                model.shield.setTarget(level: level, reason: reason)
+                model.shield.setTarget(level: level, reason: reason, sweepToward: toward)
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15) { NSApp.terminate(nil) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 20) { NSApp.terminate(nil) }
     }
 }
 

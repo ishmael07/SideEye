@@ -9,6 +9,8 @@ final class Settings: ObservableObject {
     @Published var lookAwayEnabled: Bool { didSet { defaults.set(lookAwayEnabled, forKey: "lookAwayEnabled") } }
     @Published var absentEnabled: Bool { didSet { defaults.set(absentEnabled, forKey: "absentEnabled") } }
     @Published var intruderEnabled: Bool { didSet { defaults.set(intruderEnabled, forKey: "intruderEnabled") } }
+    /// Blur sweeps in from the side opposite a head turn instead of fading the whole screen.
+    @Published var directionalBlur: Bool { didSet { defaults.set(directionalBlur, forKey: "directionalBlur") } }
     /// Degrees of free head movement.
     @Published var comfortZone: Double { didSet { defaults.set(comfortZone, forKey: "comfortZone") } }
     /// Degrees past the comfort zone over which the blur fades in.
@@ -23,14 +25,16 @@ final class Settings: ObservableObject {
             "lookAwayEnabled": true,
             "absentEnabled": true,
             "intruderEnabled": true,
+            "directionalBlur": true,
             "comfortZone": 15.0,
-            "fadeDistance": 12.0,
+            "fadeDistance": 35.0,
             "blurStrength": 48.0,
         ])
         enabled = defaults.bool(forKey: "enabled")
         lookAwayEnabled = defaults.bool(forKey: "lookAwayEnabled")
         absentEnabled = defaults.bool(forKey: "absentEnabled")
         intruderEnabled = defaults.bool(forKey: "intruderEnabled")
+        directionalBlur = defaults.bool(forKey: "directionalBlur")
         comfortZone = defaults.double(forKey: "comfortZone")
         fadeDistance = defaults.double(forKey: "fadeDistance")
         blurStrength = defaults.double(forKey: "blurStrength")
@@ -41,11 +45,14 @@ final class Settings: ObservableObject {
         config.lookAwayEnabled = lookAwayEnabled
         config.absentEnabled = absentEnabled
         config.intruderEnabled = intruderEnabled
+        config.directionalEnabled = directionalBlur
         config.comfortZone = comfortZone
         config.fullAngle = comfortZone + fadeDistance
         return config
     }
 
+    /// Only a manual recenter is saved (for setups where the camera is off to one side);
+    /// otherwise every launch auto-calibrates to the current posture.
     var savedCenter: HeadPose? {
         get {
             guard defaults.object(forKey: "centerYaw") != nil else { return nil }

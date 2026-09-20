@@ -6,6 +6,8 @@ struct DetectedFace: Equatable {
     var sample: FaceSample
     /// Vision bounding box: normalized, origin bottom-left, unmirrored.
     var box: CGRect
+    /// Head tilt toward a shoulder, degrees. Logged for tuning only.
+    var roll = 0.0
 }
 
 /// Webcam → Vision face detection. Frames live only in memory for the duration
@@ -93,7 +95,8 @@ final class CameraTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
                         pitch: degrees(observation.pitch),
                         area: Double(observation.boundingBox.width * observation.boundingBox.height)
                     ),
-                    box: observation.boundingBox
+                    box: observation.boundingBox,
+                    roll: degrees(observation.roll)
                 )
             }
         DispatchQueue.main.async { [weak self] in self?.onFaces?(faces, now) }

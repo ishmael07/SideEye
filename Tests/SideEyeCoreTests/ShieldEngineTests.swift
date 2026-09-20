@@ -261,3 +261,127 @@ private func me(yaw: Double = 0, pitch: Double = 0) -> FaceSample {
         #expect(out.level == 0)
     }
 }
+
+private let left = ShieldEngine.leftTurnYawSign
+private let down = ShieldEngine.downTiltPitchSign
+
+@Suite struct Sweep {
+    @Test func turningLeftKeepsTheLeftSideReadable() throws {
+        var e = calibrated(); var t = 0.0
+        let out = run(&e, clock: &t, faces: [me(yaw: left * 22)], seconds: 1)
+        #expect(out.level > 0 && out.level < 1)
+        let toward = try #require(out.sweepToward)
+        #expect(toward.dx < -0.99)
+        #expect(abs(toward.dy) < 0.01)
+    }
+
+    @Test func turningRightKeepsTheRightSideReadable() throws {
+        var e = calibrated(); var t = 0.0
+        let out = run(&e, clock: &t, faces: [me(yaw: left * -22)], seconds: 1)
+        #expect(try #require(out.sweepToward).dx > 0.99)
+    }
+
+    @Test func lookingDownKeepsTheBottomReadable() throws {
+        var e = calibrated(); var t = 0.0
+        let out = run(&e, clock: &t, faces: [me(pitch: down * 40)], seconds: 1)
+        #expect(out.level > 0)
+        let toward = try #require(out.sweepToward)
+        #expect(toward.dy < -0.99)
+        #expect(abs(toward.dx) < 0.01)
+    }
+
+    @Test func lookingUpKeepsTheTopReadable() throws {
+        var e = calibrated(); var t = 0.0
+        let out = run(&e, clock: &t, faces: [me(pitch: down * -40)], seconds: 1)
+        #expect(try #require(out.sweepToward).dy > 0.99)
+    }
+
+    @Test func diagonalGlanceSweepsDiagonally() throws {
+        var e = calibrated(); var t = 0.0
+        let out = run(&e, clock: &t, faces: [me(yaw: left * 30, pitch: down * 45)], seconds: 1)
+        let toward = try #require(out.sweepToward)
+        #expect(toward.dx < -0.3 && toward.dy < -0.3)
+        #expect(abs(toward.dx * toward.dx + toward.dy * toward.dy - 1) < 1e-9)
+    }
+
+    @Test func smallOffAxisWobbleDoesNotTiltTheSweep() throws {
+        var e = calibrated(); var t = 0.0
+        let out = run(&e, clock: &t, faces: [me(yaw: left * 25, pitch: 6)], seconds: 1)
+        #expect(try #require(out.sweepToward).dy == 0)
+    }
+
+    @Test func clearScreenHasNoSweep() {
+        var e = calibrated(); var t = 0.0
+        let out = run(&e, clock: &t, faces: [me(yaw: 5)], seconds: 1)
+        #expect(out.sweepToward == nil)
+    }
+
+    @Test func intruderAndAbsenceBlurUniformly() {
+        var e = calibrated(); var t = 0.0
+        let lurker = FaceSample(yaw: 0, pitch: 0, area: 0.02)
+        let intruder = run(&e, clock: &t, faces: [me(yaw: 22), lurker], seconds: 1)
+        #expect(intruder.sweepToward == nil)
+        let gone = run(&e, clock: &t, faces: [], seconds: 3)
+        #expect(gone.sweepToward == nil)
+    }
+
+    @Test func losingTheFaceMidTurnKeepsTheSweep() {
+        var e = calibrated(); var t = 0.0
+        let turned = run(&e, clock: &t, faces: [me(yaw: 22)], seconds: 1)
+        t += 1 / fps
+        let lost = e.process(faces: [], at: t)
+        #expect(lost.level == turned.level)
+        #expect(lost.sweepToward == turned.sweepToward)
+        #expect(lost.sweepToward != nil)
+    }
+
+    @Test func disabledSweepBlursUniformly() {
+        var e = calibrated(); var t = 0.0
+        e.config.directionalEnabled = false
+        let out = run(&e, clock: &t, faces: [me(yaw: 22)], seconds: 1)
+        #expect(out.level > 0)
+        #expect(out.sweepToward == nil)
+    }
+}
+
+@Suite struct Smoothing {
+    @Test func trackingJitterBarelyMovesTheBlur() {
+        var e = calibrated(); var t = 0.0
+        run(&e, clock: &t, faces: [me(yaw: 22)], seconds: 1)
+        var levels: [Double] = []
+        for i in 0..<30 {
+            t += 1 / fps
+            levels.append(e.process(faces: [me(yaw: i % 2 == 0 ? 20 : 24)], at: t).level)
+        }
+        #expect(levels.max()! - levels.min()! < 0.08)
+    }
+
+    @Test func aRealTurnIsFollowedQuickly() {
+        var e = calibrated(); var t = 0.0
+        run(&e, clock: &t, faces: [me()], seconds: 1)
+        let out = run(&e, clock: &t, faces: [me(yaw: 45)], seconds: 0.35)
+        #expect(out.level == 1)
+    }
+}
+
+@Suite struct Drift {
+    @Test func centerFollowsSlowPostureChange() {
+        var e = calibrated(); var t = 0.0
+        run(&e, clock: &t, faces: [me(yaw: 9, pitch: 12)], seconds: 300)
+        #expect(abs((e.center?.yaw ?? 0) - 9) < 1)
+        #expect(abs((e.center?.pitch ?? 0) - 12) < 1.5)
+    }
+
+    @Test func aGlanceBarelyMovesTheCenter() {
+        var e = calibrated(); var t = 0.0
+        run(&e, clock: &t, faces: [me(yaw: 12)], seconds: 3)
+        #expect(abs(e.center?.yaw ?? 99) < 1)
+    }
+
+    @Test func lookingAwayNeverDragsTheCenter() {
+        var e = calibrated(); var t = 0.0
+        let out = run(&e, clock: &t, faces: [me(yaw: 40)], seconds: 300)
+        #expect(e.center == HeadPose(yaw: 0, pitch: 0))
+        #expect(out.level == 1)
+    }
+}
