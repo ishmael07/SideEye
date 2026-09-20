@@ -47,8 +47,8 @@
   .menubar { position: absolute; inset: 0 0 auto; height: 3.1cqw; display: flex; align-items: center; gap: 2cqw; padding: 0 1.6cqw;
     font-size: 1.32cqw; color: #fff; background: rgba(40,55,75,.22); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
   .menubar b { font-weight: 700; } .menubar .r { margin-left: auto; font-variant-numeric: tabular-nums; }
-  .mail { position: absolute; left: 6.5%; right: 6.5%; top: 9%; bottom: 6.5%; border-radius: 1.05cqw; overflow: hidden; background: #fff; color: #1d1d1f;
-    display: grid; grid-template: 4.6cqw 1fr / 17% 29% 1fr; font-size: 1.32cqw; line-height: 1.4;
+  .mail { position: absolute; left: 2.6%; right: 30.2%; top: 8.4%; bottom: 6%; border-radius: 1.05cqw; overflow: hidden; background: #fff; color: #1d1d1f;
+    display: grid; grid-template: 4.4cqw 1fr / 18% 31% 1fr; font-size: 1.2cqw; line-height: 1.4;
     box-shadow: 0 0 0 .08cqw rgba(0,0,0,.18), 0 2.4cqw 6cqw rgba(0,0,0,.35); }
   .bar { grid-column: 1 / -1; display: flex; align-items: center; gap: 1.2cqw; padding: 0 1.4cqw; background: #f4f4f5; border-bottom: .08cqw solid #dcdcde; }
   .lights { display: flex; gap: .62cqw; } .lights i { width: 1.05cqw; height: 1.05cqw; border-radius: 50%; background: #ff5f57; box-shadow: inset 0 0 0 .06cqw rgba(0,0,0,.12); }
@@ -72,23 +72,51 @@
   .read td { padding: .55cqw 0; border-bottom: .08cqw solid #ececee; } .read td:last-child { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
 
   .shield, .shield i { position: absolute; inset: 0; pointer-events: none; display: block; }
-  .badge { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; opacity: 0; }
+  .badge { position: absolute; inset: 0 28% 0 0; display: grid; place-items: center; pointer-events: none; opacity: 0; }
   .badge div { text-align: center; color: #fff; padding: 3cqw 4.2cqw; border-radius: 2.6cqw; background: rgba(0,0,0,.5); box-shadow: inset 0 0 0 .08cqw rgba(255,255,255,.18), 0 1.6cqw 4cqw rgba(0,0,0,.35); }
   .badge.intruder div { background: rgba(191, 26, 38, .8); }
   .badge svg { width: 4.6cqw; height: 4.6cqw; display: block; margin: 0 auto 1.1cqw; }
   .badge b { display: block; font-size: 2.35cqw; font-weight: 700; letter-spacing: -.01em; } .badge span { font-size: 1.3cqw; opacity: .75; }
 
-  .panel { display: flex; align-items: center; gap: 28px; padding: 18px 4px 0; font-size: 16px; }
-  .state { min-width: 210px; font-weight: 500; display: flex; align-items: center; gap: 10px; }
-  .state i { width: 9px; height: 9px; border-radius: 50%; background: #30b650; transition: background .2s; } .state.up i { background: #e0342f; }
-  .gauge { position: relative; width: 190px; height: 4px; border-radius: 4px; background: var(--line); flex: none; }
-  .gauge::before { content: ""; position: absolute; inset: 0 37.5%; background: #b9b9be; border-radius: 4px; }
-  .gauge b { position: absolute; top: -5px; left: 50%; width: 3px; height: 14px; margin-left: -1.5px; border-radius: 3px; background: var(--ink); }
-  .tries { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+  /* The menu-bar popover, laid out like the real one (SwiftUI, 320 pt wide). */
+  .menubar .eye { margin-left: auto; width: 1.9cqw; height: 1.9cqw; } .menubar .r { margin-left: 0; }
+  .pop { position: absolute; top: 3.7cqw; right: 1.6cqw; width: 26.4cqw; padding: 1.35cqw; border-radius: 1.5cqw; color: #f2f2f4; font-size: 1.06cqw; line-height: 1.3;
+    background: rgba(34, 34, 38, .93); box-shadow: inset 0 0 0 .08cqw rgba(255,255,255,.14), 0 0 0 .08cqw rgba(0,0,0,.5), 0 2cqw 5cqw rgba(0,0,0,.45);
+    display: flex; flex-direction: column; gap: 1.1cqw; }
+  .pop::before { content: ""; position: absolute; top: -.62cqw; right: 8.35cqw; width: 1.3cqw; height: 1.3cqw; background: rgba(34,34,38,.93); transform: rotate(45deg); border-radius: .2cqw 0 0 0; box-shadow: inset .08cqw .08cqw 0 rgba(255,255,255,.14); }
+  .pop hr { border: 0; border-top: .08cqw solid rgba(255,255,255,.1); margin: 0; }
+  .pop svg { width: 1.5cqw; height: 1.5cqw; flex: none; }
+  .phead { display: flex; align-items: center; gap: .85cqw; } .phead svg { width: 2.1cqw; height: 2.1cqw; }
+  .phead b { display: block; font-size: 1.28cqw; } .phead small { color: #a0a0a8; font-size: .95cqw; display: block; }
+  .switch { margin-left: auto; position: relative; width: 2.7cqw; height: 1.55cqw; border-radius: 9cqw; background: #55555c; transition: background .15s; flex: none; }
+  .switch::after { content: ""; position: absolute; top: .14cqw; left: .14cqw; width: 1.27cqw; height: 1.27cqw; border-radius: 50%; background: #e9e9ee; transition: transform .15s; }
+  .switch[aria-checked="true"] { background: #2f7cf6; } .switch[aria-checked="true"]::after { transform: translateX(1.15cqw); }
+  .switch.big { width: 3.6cqw; height: 2.05cqw; } .switch.big::after { width: 1.77cqw; height: 1.77cqw; } .switch.big[aria-checked="true"]::after { transform: translateX(1.55cqw); }
+  .preview { position: relative; aspect-ratio: 4 / 3; border-radius: 1cqw; overflow: hidden; background: #000; }
+  .preview canvas, .preview video { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .preview video { object-fit: cover; transform: scaleX(-1); display: none; }
+  .preview .chip { position: absolute; top: .7cqw; left: .7cqw; font: 600 .85cqw ui-monospace, "SF Mono", Menlo, monospace; background: rgba(0,0,0,.55); padding: .25cqw .6cqw; border-radius: 9cqw; }
+  .preview .off { position: absolute; inset: 0; display: none; place-items: center; color: rgba(255,255,255,.55); font-weight: 500; }
+  .meter { position: relative; height: .68cqw; border-radius: 9cqw; background: rgba(255, 69, 58, .35); }
+  .meter::before, .meter::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 9cqw; }
+  .meter::before { width: var(--full, 83%); background: rgba(255, 159, 10, .6); } .meter::after { width: var(--comfort, 25%); background: rgba(48, 209, 88, .75); }
+  .meter b { position: absolute; z-index: 1; top: -.28cqw; left: 50%; width: .34cqw; height: 1.2cqw; margin-left: -.17cqw; border-radius: 9cqw; background: #fff; box-shadow: 0 0 .3cqw rgba(0,0,0,.5); }
+  .rows { display: flex; flex-direction: column; gap: .75cqw; } .rows > div { display: flex; align-items: center; gap: .7cqw; }
+  .rows > .slide { display: block; }
+  .slide label { display: flex; justify-content: space-between; font-size: .98cqw; margin-bottom: .2cqw; } .slide output { color: #a0a0a8; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .slide input { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 1.4cqw; margin: 0; background: transparent; cursor: pointer; }
+  .slide input::-webkit-slider-runnable-track { height: .34cqw; border-radius: 9cqw; background: linear-gradient(to right, #2f7cf6 var(--p, 50%), #4a4a50 var(--p, 50%)); }
+  .slide input::-moz-range-track { height: .34cqw; border-radius: 9cqw; background: #4a4a50; } .slide input::-moz-range-progress { height: .34cqw; border-radius: 9cqw; background: #2f7cf6; }
+  .slide input::-webkit-slider-thumb { -webkit-appearance: none; width: 2cqw; height: 1.3cqw; margin-top: -.48cqw; border-radius: 9cqw; background: #e4e4e8; box-shadow: 0 .1cqw .3cqw rgba(0,0,0,.4); }
+  .slide input::-moz-range-thumb { width: 2cqw; height: 1.3cqw; border: 0; border-radius: 9cqw; background: #e4e4e8; }
+  .pfoot { display: flex; align-items: center; gap: .8cqw; } .pfoot span { padding: .4cqw .9cqw; border-radius: .55cqw; background: rgba(255,255,255,.1); display: flex; gap: .45cqw; align-items: center; font-size: .98cqw; }
+  .pfoot span svg { width: 1.15cqw; height: 1.15cqw; } .pfoot code { color: #77777f; font: .85cqw ui-monospace, "SF Mono", Menlo, monospace; } .pfoot span:last-child { margin-left: auto; }
+
+  .panel { display: flex; align-items: center; gap: 20px; padding: 18px 4px 0; }
+  .tries { margin-left: auto; display: flex; gap: 6px; align-items: center; flex: none; }
   .tries button { padding: 8px 15px; border-radius: 999px; background: var(--fill); font-size: 15px; font-weight: 500; transition: background .15s; }
   .tries button:hover { background: #e8e8ed; } .tries button[aria-pressed="true"] { background: var(--ink); color: #fff; }
-  #video { width: 72px; height: 54px; border-radius: 8px; object-fit: cover; transform: scaleX(-1); display: none; background: #000; }
-  .note { color: var(--soft); font-size: 16px; padding: 12px 4px 0; min-height: 36px; }
+  .note { color: var(--soft); font-size: 16px; }
 
   /* ---------- the rest: a few big lines ---------- */
   section { padding-top: clamp(96px, 13vw, 170px); }
@@ -108,7 +136,15 @@
   @media (max-width: 860px) {
     .top { flex-direction: column; align-items: start; gap: 20px; padding-top: 12px; }
     #stage { width: 100%; }
-    .panel { flex-wrap: wrap; gap: 14px 20px; } .tries { margin-left: 0; flex-wrap: wrap; width: 100%; } .gauge { flex: 1; }
+    /* Phones: the mail window on top, the popover enlarged underneath it. */
+    .display { aspect-ratio: 100 / 184; } .badge { inset: 0; }
+    .mail { left: 3%; right: 3%; top: 5.5cqw; bottom: auto; height: 52cqw; grid-template-columns: 1fr; font-size: 2.3cqw; }
+    .mail .boxes, .mail .list { display: none; } .bar strong { margin-left: 4%; font-size: 2.4cqw; } .bar em, .bar .search { display: none; }
+    .read h3 { font-size: 3.4cqw; } .from small, .from time { font-size: 2cqw; } .from .who { width: 5cqw; height: 5cqw; font-size: 2cqw; }
+    .menubar { height: 4.4cqw; font-size: 2.1cqw; } .menubar span:not(.r) { display: none; } .menubar .eye { width: 2.8cqw; height: 2.8cqw; }
+    .pop { zoom: 2.2; top: 27.5cqw; right: 9.5cqw; } .pop::before { display: none; }
+    .badge b { font-size: 4.6cqw; } .badge span { font-size: 2.5cqw; } .badge svg { width: 9cqw; height: 9cqw; } .badge div { padding: 5cqw 6cqw; border-radius: 4.5cqw; }
+    .panel { flex-wrap: wrap; gap: 12px; } .tries { margin-left: 0; flex-wrap: wrap; }
     .three { grid-template-columns: 1fr; gap: 30px; }
     nav .links a.opt { display: none; }
   }
@@ -134,7 +170,7 @@
 
   <div id="stage">
     <div class="display" id="screen">
-      <div class="menubar"><b>Mail</b><span>File</span><span>Edit</span><span>View</span><span>Mailbox</span><span>Message</span><span class="r">Tue 9:41 AM</span></div>
+      <div class="menubar"><b>Mail</b><span>File</span><span>Edit</span><span>View</span><span>Mailbox</span><span>Message</span><svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span class="r">Tue 9:41 AM</span></div>
       <div class="mail">
         <div class="bar"><span class="lights"><i></i><i></i><i></i></span><strong>Inbox <em>· 3 unread</em></strong><span class="search">Search</span></div>
         <div class="boxes">
@@ -163,19 +199,36 @@
         <svg id="badgeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></svg>
         <b id="badgeTitle">Screen hidden</b><span id="badgeSub">Look back to pick up where you left off</span>
       </div></div>
+      <div class="pop" id="pop">
+        <div class="phead"><svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="7.5" cy="12" rx="4.2" ry="6.5"/><ellipse cx="16.5" cy="12" rx="4.2" ry="6.5"/><circle cx="6" cy="12.5" r="1.7" fill="#222226"/><circle cx="15" cy="12.5" r="1.7" fill="#222226"/></svg><div><b>SideEye</b><small id="status">Watching · screen visible</small></div><button class="switch big" id="swEnabled" role="switch" aria-checked="true" aria-label="Enable SideEye"></button></div>
+        <div class="preview"><canvas id="mesh"></canvas><video id="video" playsinline muted></video><canvas id="boxes"></canvas><span class="chip" id="count">1 face</span><div class="off" id="camOff">Camera off</div></div>
+        <div class="meter" id="meter"><b id="needle"></b></div>
+        <hr>
+        <div class="rows">
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.2A10 10 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 3.9M6.5 6.6C3.6 8.6 2 12 2 12s4 7 10 7a9.7 9.7 0 0 0 4.2-1"/></svg>I look away<button class="switch" id="swAway" role="switch" aria-checked="true" aria-label="I look away"></button></div>
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="2"/><path d="M7 21l3-6.5-2.5-2.5 1-5 4 1.5 2 3.5h3.5M10 14.5l3.5 2.5.5 4"/></svg>I step away<button class="switch" id="swAbsent" role="switch" aria-checked="true" aria-label="I step away"></button></div>
+          <div><svg viewBox="0 0 24 24" fill="currentColor"><ellipse cx="7.5" cy="12" rx="4.2" ry="6.5"/><ellipse cx="16.5" cy="12" rx="4.2" ry="6.5"/><circle cx="6" cy="12.5" r="1.7" fill="#222226"/><circle cx="15" cy="12.5" r="1.7" fill="#222226"/></svg>Someone else looks<button class="switch" id="swIntruder" role="switch" aria-checked="true" aria-label="Someone else looks"></button></div>
+        </div>
+        <hr>
+        <div class="rows">
+          <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M13 8.5h4.5v7H13z" fill="currentColor"/></svg>Blur sweeps in as I turn<button class="switch" id="swSweep" role="switch" aria-checked="true" aria-label="Blur sweeps in as I turn"></button></div>
+          <div class="slide"><label>Comfort zone<output id="outComfort">15°</output></label><input id="inComfort" type="range" min="5" max="30" value="15" aria-label="Comfort zone"></div>
+          <div class="slide"><label>Fade distance<output id="outFade">35°</output></label><input id="inFade" type="range" min="5" max="60" value="35" aria-label="Fade distance"></div>
+          <div class="slide"><label>Blur strength<output id="outBlur">48</output></label><input id="inBlur" type="range" min="16" max="90" value="48" aria-label="Blur strength"></div>
+        </div>
+        <hr>
+        <div class="pfoot"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/></svg>Recenter</span><code>⌃⌥C · ⌃⌥S pause</code><span>Quit</span></div>
+      </div>
     </div>
 
     <div class="panel">
-      <div class="state" id="state"><i></i><span id="status">Watching</span></div>
-      <div class="gauge" title="Head angle"><b id="needle"></b></div>
+      <p class="note" id="hint">Your cursor is your eyes. Move it off the screen to look away.</p>
       <div class="tries">
-        <video id="video" playsinline muted></video>
         <button id="btnAway">Walk away</button>
         <button id="btnIntruder">Someone behind you</button>
         <button id="btnCamera" aria-pressed="false">Use my camera</button>
       </div>
     </div>
-    <p class="note" id="hint">Your cursor is your eyes. Move it off the screen to look away.</p>
   </div>
 
   <section>
@@ -221,7 +274,9 @@ document.querySelectorAll("[data-link]").forEach(a => { a.href = LINKS[a.dataset
 fetch("demo.mp4", { method: "HEAD" }).then(r => { if (r.ok) document.getElementById("film").hidden = false; }).catch(() => {});
 
 // ---- the same rules the app uses -------------------------------------------
-const COMFORT = 15, FULL = 45, PITCH_WEIGHT = 1.3, DEADBAND = 8, FRONT = 0.45;
+const PITCH_WEIGHT = 1.3, DEADBAND = 8, FRONT = 0.45;
+// The popover's switches and sliders are live, with the app's defaults.
+const settings = { enabled: true, away: true, absent: true, intruder: true, sweep: true, comfort: 15, fade: 35, blur: 48 };
 const $ = id => document.getElementById(id);
 const screen = $("screen"), layers = [...$("shield").children], badge = $("badge");
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -234,11 +289,13 @@ const target = { yaw: 0, pitch: 0 };
 const drawn = { coverage: 0, strength: 0, tx: -1, ty: 0, sweeping: false };
 
 function decide() {
-  if (pose.intruder) return { level: 1, reason: "intruder" };
-  if (!pose.present) return { level: 1, reason: "absent" };
+  if (!settings.enabled) return { level: 0, reason: "none" };
+  if (pose.intruder && settings.intruder) return { level: 1, reason: "intruder" };
+  if (!pose.present) return settings.absent ? { level: 1, reason: "absent" } : { level: 0, reason: "none" };
   const dev = Math.max(Math.abs(pose.yaw), Math.abs(pose.pitch) * PITCH_WEIGHT);
-  const level = clamp((dev - COMFORT) / (FULL - COMFORT), 0, 1);
+  const level = settings.away ? clamp((dev - settings.comfort) / settings.fade, 0, 1) : 0;
   if (level === 0) return { level: 0, reason: "none" };
+  if (!settings.sweep) return { level, reason: "away" };
   const past = v => Math.sign(v) * Math.max(Math.abs(v) - DEADBAND, 0);
   const tx = -past(pose.yaw), ty = past(pose.pitch * PITCH_WEIGHT);   // screen coords, y down
   const len = Math.hypot(tx, ty) || 1;
@@ -279,7 +336,7 @@ function render(out, dt) {
     const p0 = (start + FRONT * 0.55 * lag) * 100, p1 = p0 + FRONT * 45;
     el.style.maskImage = el.style.webkitMaskImage = `linear-gradient(${angle}deg, transparent ${p0}%, #000 ${p1}%)`;
     if (tint) el.style.background = `rgba(10,10,14,${0.34 * drawn.strength})`;
-    else el.style.backdropFilter = el.style.webkitBackdropFilter = `blur(${(BLURS[i] * drawn.strength).toFixed(1)}px)`;
+    else el.style.backdropFilter = el.style.webkitBackdropFilter = `blur(${(BLURS[i] * drawn.strength * settings.blur / 48).toFixed(1)}px)`;
     el.style.display = visible ? "block" : "none";
   });
 
@@ -293,10 +350,115 @@ function render(out, dt) {
     $("badgeSub").textContent = out.reason === "intruder" ? "Someone else is looking at your screen"
       : out.reason === "absent" ? "Come back to pick up where you left off" : "Look back to pick up where you left off";
   }
-  if (!calibrating) $("status").textContent = { none: "Watching", away: "You looked away", absent: "Nobody here", intruder: "Someone's looking" }[out.reason];
-  $("state").classList.toggle("up", out.reason !== "none");
-  $("needle").style.transform = `translateX(${clamp(-pose.yaw, -60, 60) / 60 * 95}px)`;
-  $("needle").style.opacity = pose.present ? 1 : 0.15;
+  if (!calibrating) $("status").textContent = !settings.enabled ? "Paused · camera off" : { none: pose.present ? "Watching · screen visible" : "Watching · nobody here",
+    away: "Shielded · you looked away", absent: "Shielded · nobody here", intruder: "Shielded · someone's looking" }[out.reason];
+  const meter = $("meter");
+  $("needle").style.transform = `translateX(${clamp(-pose.yaw, -60, 60) / 60 * meter.clientWidth / 2}px)`;
+  $("needle").style.opacity = pose.present && settings.enabled ? 1 : 0;
+}
+
+// ---- popover controls -------------------------------------------------------
+for (const [id, key] of [["swEnabled", "enabled"], ["swAway", "away"], ["swAbsent", "absent"], ["swIntruder", "intruder"], ["swSweep", "sweep"]])
+  $(id).onclick = e => { settings[key] = !settings[key]; e.currentTarget.setAttribute("aria-checked", settings[key]); syncControls(); };
+for (const [id, out, key, unit] of [["inComfort", "outComfort", "comfort", "°"], ["inFade", "outFade", "fade", "°"], ["inBlur", "outBlur", "blur", ""]])
+  $(id).oninput = e => { settings[key] = +e.target.value; $(out).textContent = e.target.value + unit; syncControls(); };
+function syncControls() {
+  for (const id of ["inComfort", "inFade", "inBlur"]) { const el = $(id); el.style.setProperty("--p", (el.value - el.min) / (el.max - el.min) * 100 + "%"); }
+  $("meter").style.setProperty("--comfort", Math.min(settings.comfort / 60, 1) * 100 + "%");
+  $("meter").style.setProperty("--full", Math.min((settings.comfort + settings.fade) / 60, 1) * 100 + "%");
+  $("camOff").style.display = settings.enabled ? "none" : "grid";
+  $("count").style.display = settings.enabled ? "" : "none";
+}
+syncControls();
+
+// ---- camera preview: a tracked face mesh, so the demo shows a person without showing anyone ----
+const HEAD = [], TORSO = [], LINKS_3D = [], CONTOURS = [];
+(function buildHead() {
+  const golden = Math.PI * (3 - Math.sqrt(5)), bump = (dx, dy, sx, sy) => Math.exp(-(dx * dx / sx + dy * dy / sy));
+  const relief = (x, y) => 0.3 * bump(x, y + 0.13, 0.016, 0.085)                                     // nose
+    - 0.08 * (bump(x - 0.3, y - 0.2, 0.02, 0.012) + bump(x + 0.3, y - 0.2, 0.02, 0.012))            // eye sockets
+    + 0.05 * bump(x, y - 0.38, 0.24, 0.009) + 0.06 * bump(x, y + 0.52, 0.045, 0.006);               // brow, lips
+  for (let i = 0; i < 640; i++) {
+    let y = 1 - 2 * (i + 0.5) / 640; const r = Math.sqrt(1 - y * y), t = golden * i;
+    let x = Math.cos(t) * r * 0.8, z = Math.sin(t) * r * 0.94;
+    if (y < 0) { x *= 1 - 0.34 * Math.pow(-y, 1.5); z *= 1 - 0.14 * -y; }          // jaw tapers to the chin
+    y *= 1.14;
+    if (z > 0) z += relief(x, y);
+    HEAD.push([x, y, z]);
+  }
+  // Feature contours, the way face trackers draw them, laid onto the front of the head.
+  const onFace = (x, y) => { const yy = y / 1.14, taper = yy < 0 ? 1 - 0.34 * Math.pow(-yy, 1.5) : 1, xx = x / (0.8 * taper);
+    return [x, y, 0.94 * Math.sqrt(Math.max(0, 1 - xx * xx - yy * yy)) * (yy < 0 ? 1 + 0.14 * yy : 1) + relief(x, y) + 0.015]; };
+  const curve = (fn, n = 18) => CONTOURS.push(Array.from({ length: n + 1 }, (_, i) => onFace(...fn(i / n))));
+  for (const side of [-1, 1]) {
+    curve(t => [side * (0.3 + 0.15 * Math.cos(t * 6.283)), 0.2 + 0.062 * Math.sin(t * 6.283)], 22);            // eye
+    curve(t => [side * (0.3 + 0.05 * Math.cos(t * 6.283)), 0.2 + 0.05 * Math.sin(t * 6.283)], 12);             // iris
+    curve(t => [side * (0.13 + 0.36 * t), 0.37 + 0.06 * Math.sin(t * 3.1416) - 0.03 * t], 10);                 // brow
+    curve(t => [side * (0.02 + 0.11 * t), -0.24 + 0.05 * Math.sin(t * 3.1416)], 8);                            // nostril
+  }
+  curve(t => [0, 0.3 - 0.5 * t], 10);                                                                           // nose ridge
+  curve(t => [-0.24 + 0.48 * t, -0.52 + 0.05 * Math.sin(t * 3.1416) - 0.02 * Math.sin(t * 9.42)], 16);        // upper lip
+  curve(t => [-0.24 + 0.48 * t, -0.52 - 0.075 * Math.sin(t * 3.1416)], 16);                                    // lower lip
+  curve(t => { const a = (0.12 + 0.76 * t) * 3.1416; return [-0.74 * Math.cos(a) * (1 - 0.2 * Math.sin(a)), -0.1 - 0.98 * Math.sin(a)]; }, 28);   // jawline
+  for (let i = 0; i < 300; i++) {                                                   // neck and shoulders
+    const v = (i + 0.5) / 300, t = golden * i, r = Math.sqrt(1 - v * v);
+    TORSO.push([Math.cos(t) * r * 2.05, -2.55 + v * 0.95, Math.sin(t) * r * 0.85 - 0.1]);
+  }
+  for (let i = 0; i < 70; i++) { const t = golden * i; TORSO.push([Math.cos(t) * 0.4, -1.1 - (i / 70) * 0.6, Math.sin(t) * 0.4 - 0.05]); }
+  HEAD.forEach((p, i) => {                                                          // each point links to its 3 nearest
+    const near = HEAD.map((q, j) => [(p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2 + (p[2] - q[2]) ** 2, j]).sort((m, n) => m[0] - n[0]).slice(1, 4);
+    for (const [, j] of near) if (j > i) LINKS_3D.push([i, j]);
+  });
+})();
+
+const meshCanvas = $("mesh"), boxCanvas = $("boxes"), shown = { me: 1, them: 0 };
+function project(points, yaw, pitch, cx, cy, radius) {
+  // Mirrored like a selfie view: turning to your left moves the nose to the left of the picture.
+  const a = -yaw * Math.PI / 180, b = pitch * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b);
+  return points.map(([x, y, z]) => {
+    const x1 = x * ca + z * sa, z1 = -x * sa + z * ca, y2 = y * cb - z1 * sb, z2 = y * sb + z1 * cb, k = radius * (1 + 0.22 * z2);
+    return [cx + x1 * k, cy - y2 * k, z2];
+  });
+}
+function drawPerson(ctx, w, h, cx, cy, radius, yaw, pitch, alpha, stroke) {
+  if (alpha < 0.01) return;
+  const head = project(HEAD, yaw, pitch, cx, cy, radius), torso = project(TORSO, yaw * 0.25, 0, cx, cy, radius);
+  ctx.lineWidth = Math.max(0.5, w / 700);
+  for (const [i, j] of LINKS_3D) {
+    const depth = Math.min(head[i][2], head[j][2]); if (depth < -0.05) continue;
+    ctx.strokeStyle = `rgba(150,190,255,${(0.05 + 0.2 * depth) * alpha})`;
+    ctx.beginPath(); ctx.moveTo(head[i][0], head[i][1]); ctx.lineTo(head[j][0], head[j][1]); ctx.stroke();
+  }
+  for (const [pts, base] of [[torso, 0.45], [head, 0.7]]) for (const [x, y, z] of pts) {
+    const front = clamp((z + 0.25) / 1.25, 0, 1);
+    ctx.fillStyle = `rgba(200,218,255,${(0.08 + 0.7 * front) * base * alpha})`;
+    ctx.beginPath(); ctx.arc(x, y, radius * (0.009 + 0.011 * front), 0, 6.283); ctx.fill();
+  }
+  ctx.lineWidth = Math.max(1, radius * 0.022); ctx.lineJoin = ctx.lineCap = "round";
+  for (const contour of CONTOURS) {
+    const line = project(contour, yaw, pitch, cx, cy, radius);
+    for (let i = 1; i < line.length; i++) {
+      const depth = Math.min(line[i][2], line[i - 1][2]); if (depth < 0.02) continue;        // hidden once it turns past the edge
+      ctx.strokeStyle = `rgba(232,240,255,${clamp(depth * 2.2, 0, 0.95) * alpha})`;
+      ctx.beginPath(); ctx.moveTo(line[i - 1][0], line[i - 1][1]); ctx.lineTo(line[i][0], line[i][1]); ctx.stroke();
+    }
+  }
+  const xs = head.map(p => p[0]), ys = head.map(p => p[1]), pad = radius * 0.1;
+  ctx.strokeStyle = stroke.replace("A", alpha); ctx.lineWidth = Math.max(1.5, w / 190);
+  ctx.beginPath(); ctx.roundRect(Math.min(...xs) - pad, Math.min(...ys) - pad, Math.max(...xs) - Math.min(...xs) + pad * 2, Math.max(...ys) - Math.min(...ys) + pad * 2, radius * 0.14); ctx.stroke();
+}
+function drawPreview(dt) {
+  const k = 1 - Math.exp(-dt / 0.14);
+  shown.me += ((pose.present ? 1 : 0) - shown.me) * k; shown.them += ((pose.intruder ? 1 : 0) - shown.them) * k;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2), w = Math.round(meshCanvas.clientWidth * dpr), h = Math.round(meshCanvas.clientHeight * dpr);
+  for (const c of [meshCanvas, boxCanvas]) if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+  const ctx = meshCanvas.getContext("2d"); ctx.clearRect(0, 0, w, h);
+  if (camera.on || !settings.enabled) return;
+  const glow = ctx.createRadialGradient(w / 2, h * 0.45, 0, w / 2, h * 0.45, w * 0.7);
+  glow.addColorStop(0, "#1c2028"); glow.addColorStop(1, "#08090b"); ctx.fillStyle = glow; ctx.fillRect(0, 0, w, h);
+  drawPerson(ctx, w, h, w * (0.85 + 0.14 * (1 - shown.them)), h * 0.36, h * 0.15, -16, 5, shown.them, "rgba(255,69,58,A)");
+  drawPerson(ctx, w, h, w * (0.45 - 0.95 * (1 - shown.me)), h * 0.52, h * 0.31, pose.yaw, pose.pitch, shown.me, "rgba(48,209,88,A)");
+  $("count").textContent = (n => `${n} face${n === 1 ? "" : "s"}`)((pose.present ? 1 : 0) + (pose.intruder ? 1 : 0));
 }
 
 // ---- drivers: autoplay, cursor, buttons, real camera ------------------------
@@ -345,6 +507,7 @@ $("btnAway").onclick = e => pulse("away", 3000, e.currentTarget);
 
 // Real face tracking in the browser (MediaPipe, on-device). Yaw/pitch come from where the
 // nose sits between the cheeks / brow and chin, so the signs can't be mirrored by accident.
+if (matchMedia("(pointer: coarse)").matches) $("hint").textContent = "Watch it run, or try the buttons. It's a Mac app, so the real thing needs a Mac.";
 const IDLE_HINT = $("hint").textContent;
 $("btnCamera").onclick = async () => {
   const btn = $("btnCamera"), video = $("video");
@@ -359,27 +522,34 @@ $("btnCamera").onclick = async () => {
     });
     const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: "user" } });
     video.srcObject = stream; await video.play();
-    video.style.display = "block"; camera.on = true; mode = "camera";
+    video.style.display = "block"; camera.on = true; mode = "camera"; settings.enabled = true; $("swEnabled").setAttribute("aria-checked", "true"); syncControls();
     btn.textContent = "Stop camera"; btn.setAttribute("aria-pressed", "true");
     $("hint").textContent = "Look at the screen above for a second, then look away. The video stays in this tab.";
     let base = null, samples = [], lost = 0, seen = 0, lastTime = -1;
 
     camera.stop = () => {
       camera.on = false; calibrating = false; stream.getTracks().forEach(t => t.stop()); tracker.close();
-      video.style.display = "none"; btn.textContent = "Use my camera"; btn.setAttribute("aria-pressed", "false");
+      video.style.display = "none"; boxCanvas.getContext("2d").clearRect(0, 0, boxCanvas.width, boxCanvas.height); btn.textContent = "Use my camera"; btn.setAttribute("aria-pressed", "false");
       $("hint").textContent = IDLE_HINT; mode = "auto"; pose.present = true; pose.intruder = false;
     };
     camera.step = () => {
       if (video.currentTime === lastTime) return; lastTime = video.currentTime;
       const faces = tracker.detectForVideo(video, performance.now()).faceLandmarks.map(p => {
         const xs = p.map(q => q.x), ys = p.map(q => q.y);
-        const area = (Math.max(...xs) - Math.min(...xs)) * (Math.max(...ys) - Math.min(...ys));
+        const box = [Math.min(...xs), Math.min(...ys), Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)], area = box[2] * box[3];
         const midX = (p[234].x + p[454].x) / 2, halfW = Math.abs(p[454].x - p[234].x) / 2;
         const midY = (p[10].y + p[152].y) / 2, halfH = Math.abs(p[152].y - p[10].y) / 2;
         // Unmirrored frame: turning to your own left moves the nose toward image-right.
-        return { area, yaw: clamp((p[1].x - midX) / halfW, -1, 1) * 62, pitch: clamp((p[1].y - midY) / halfH, -1, 1) * 70 };
+        return { area, box, yaw: clamp((p[1].x - midX) / halfW, -1, 1) * 62, pitch: clamp((p[1].y - midY) / halfH, -1, 1) * 70 };
       }).sort((a, b) => b.area - a.area);
 
+      const ctx = boxCanvas.getContext("2d"), w = boxCanvas.width, h = boxCanvas.height;
+      ctx.clearRect(0, 0, w, h); ctx.lineWidth = Math.max(1.5, w / 190);
+      faces.forEach((f, i) => {                           // mirrored to match the selfie-view video
+        ctx.strokeStyle = i === 0 ? "rgb(48,209,88)" : "rgb(255,69,58)";
+        ctx.beginPath(); ctx.roundRect((1 - f.box[0] - f.box[2]) * w, f.box[1] * h, f.box[2] * w, f.box[3] * h, w * 0.02); ctx.stroke();
+      });
+      $("count").textContent = `${faces.length} face${faces.length === 1 ? "" : "s"}`;
       seen = faces.slice(1).some(f => f.area > 0.004) ? seen + 1 : 0; pose.intruder = seen > 4;
       if (!faces.length) { if (++lost > 8) pose.present = false; return; }
       lost = 0; pose.present = true;
@@ -389,7 +559,7 @@ $("btnCamera").onclick = async () => {
         const spread = k => Math.max(...samples.map(s => s[k])) - Math.min(...samples.map(s => s[k]));
         if (samples.length === 25 && spread("yaw") < 8 && spread("pitch") < 10)
           base = { yaw: samples.reduce((s, f) => s + f.yaw, 0) / 25, pitch: samples.reduce((s, f) => s + f.pitch, 0) / 25 };
-        calibrating = !base; $("status").textContent = "Calibrating";
+        calibrating = !base; $("status").textContent = "Calibrating · look at your screen";
         target.yaw = target.pitch = 0; return;
       }
       target.yaw = me.yaw - base.yaw; target.pitch = me.pitch - base.pitch;
@@ -414,7 +584,7 @@ function frame(now) {
   }
   const follow = 1 - Math.exp(-dt / 0.09);
   pose.yaw += (target.yaw - pose.yaw) * follow; pose.pitch += (target.pitch - pose.pitch) * follow;
-  render(decide(), dt);
+  render(decide(), dt); drawPreview(dt);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
