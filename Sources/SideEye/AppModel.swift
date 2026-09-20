@@ -15,6 +15,8 @@ final class AppModel: ObservableObject {
     @Published private(set) var cameraAccess = CameraAccess.unknown
 
     private var engine: ShieldEngine
+    /// Set by the app delegate; live preview state is only published while someone can see it.
+    var isPopoverVisible = false
     /// Screen locked or asleep: nothing to protect, so the camera is released.
     private var suspended = false
     private var subscriptions: Set<AnyCancellable> = []
@@ -77,8 +79,20 @@ final class AppModel: ObservableObject {
     private func handle(_ faces: [DetectedFace], at time: TimeInterval) {
         guard settings.enabled, !suspended else { return }
         let output = engine.process(faces: faces.map(\.sample), at: time)
-        self.faces = faces
-        self.output = output
+        // The popover redraws on every change; with it closed only the menu-bar icon
+        // cares, and only about the reason.
+        if isPopoverVisible {
+            self.faces = faces
+            self.output = output
+        } else if output.reason != self.output.reason {
+            self.output = output
+        }
+        // Full-rate tracking only while a head is on the move through the blur zone.
+        // Resting at the center, or nobody there at all, is the all-day state: keep it cheap.
+        let resting = output.level == 0 && !output.calibrating
+            && abs(output.yawOffset ?? .infinity) < settings.comfortZone * 0.4
+            && abs(output.pitchOffset ?? .infinity) < settings.comfortZone * 0.3
+        tracker.fastTracking = !faces.isEmpty && !resting
         if let log {
             let poses = faces.map { String(format: "(yaw %.1f pitch %.1f roll %.1f area %.4f x %.3f y %.3f)", $0.sample.yaw, $0.sample.pitch, $0.sample.roll, $0.sample.area, $0.box.midX, $0.box.midY) }
             let line = String(format: "%.2f level %.2f %@ ", time, output.level, output.reason.rawValue) + (output.sweepToward.map { String(format: "toward(%.2f,%.2f) ", $0.dx, $0.dy) } ?? "") + poses.joined(separator: " ") + "\n"

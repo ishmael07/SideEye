@@ -19,8 +19,11 @@ final class CameraTracker: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
     private let videoQueue = DispatchQueue(label: "sideeye.video", qos: .userInitiated)
     private var configured = false
     private var lastAnalysed: TimeInterval = 0
-    // Every camera frame (30 fps source): tracking latency is what makes the blur feel slow.
-    private let minFrameInterval = 0.025
+    /// Analyse every camera frame (30 fps) instead of ~10 a second. Tracking latency is what
+    /// makes the blur feel slow, but Vision costs ~20 ms of CPU per frame, so the owner only
+    /// asks for full rate while a head is on the move. Written on main, read on the video queue.
+    var fastTracking = true
+    private var minFrameInterval: Double { fastTracking ? 0.025 : 0.09 }
     private let minConfidence: Float = 0.5
 
     static func requestAccess(_ completion: @escaping (Bool) -> Void) {

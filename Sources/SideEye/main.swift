@@ -4,7 +4,7 @@ import Combine
 import SideEyeCore
 import SwiftUI
 
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     private let model = AppModel()
     private let hotKeys = HotKeys()
     private let popover = NSPopover()
@@ -17,6 +17,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.button?.action = #selector(togglePopover)
 
         popover.behavior = .transient
+        popover.delegate = self
         let controller = NSHostingController(rootView: PopoverView(model: model))
         controller.sizingOptions = .preferredContentSize
         popover.contentViewController = controller
@@ -59,11 +60,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.button?.image = image
     }
 
+    func popoverDidClose(_ notification: Notification) {
+        model.isPopoverVisible = false
+    }
+
     @objc private func togglePopover() {
         guard let button = statusItem.button else { return }
         if popover.isShown {
             popover.performClose(nil)
         } else {
+            model.isPopoverVisible = true
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
             popover.contentViewController?.view.window?.makeKey()
             NSApp.activate(ignoringOtherApps: true)
