@@ -12,18 +12,14 @@ func render(_ pixels: Int) -> Data {
     let inset = size * 0.1
     let tile = NSRect(x: inset, y: inset, width: size - inset * 2, height: size - inset * 2)
     let shape = NSBezierPath(roundedRect: tile, xRadius: tile.width * 0.225, yRadius: tile.width * 0.225)
-    NSGradient(
-        starting: NSColor(red: 0.16, green: 0.10, blue: 0.32, alpha: 1),
-        ending: NSColor(red: 0.04, green: 0.03, blue: 0.10, alpha: 1)
-    )!.draw(in: shape, angle: -90)
+    let shadow = NSShadow(); shadow.shadowColor = NSColor.black.withAlphaComponent(0.28); shadow.shadowBlurRadius = size * 0.03; shadow.shadowOffset = NSSize(width: 0, height: -size * 0.012)
+    NSGraphicsContext.saveGraphicsState(); shadow.set(); NSColor.white.setFill(); shape.fill(); NSGraphicsContext.restoreGraphicsState()
+    NSGradient(starting: NSColor(white: 1, alpha: 1), ending: NSColor(white: 0.9, alpha: 1))!.draw(in: shape, angle: -90)
 
-    let config = NSImage.SymbolConfiguration(pointSize: size * 0.4, weight: .bold)
-        .applying(.init(paletteColors: [.white]))
-    if let symbol = NSImage(systemSymbolName: "eyes.inverse", accessibilityDescription: nil)?.withSymbolConfiguration(config) {
-        let scale = tile.width * 0.62 / symbol.size.width
-        let drawn = NSSize(width: symbol.size.width * scale, height: symbol.size.height * scale)
-        symbol.draw(in: NSRect(x: tile.midX - drawn.width / 2, y: tile.midY - drawn.height / 2, width: drawn.width, height: drawn.height))
-    }
+    // The eyes emoji, as the system draws it.
+    let glyph = NSAttributedString(string: "👀", attributes: [.font: NSFont(name: "Apple Color Emoji", size: tile.width * 0.6) ?? NSFont.systemFont(ofSize: tile.width * 0.6)])
+    let bounds = glyph.boundingRect(with: NSSize(width: size, height: size), options: [.usesLineFragmentOrigin])
+    glyph.draw(at: NSPoint(x: tile.midX - bounds.width / 2 - bounds.minX, y: tile.midY - bounds.height / 2 - bounds.minY))
     NSGraphicsContext.restoreGraphicsState()
     return rep.representation(using: .png, properties: [:])!
 }
