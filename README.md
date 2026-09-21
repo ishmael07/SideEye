@@ -22,7 +22,8 @@ That puts the latest release in `/Applications` and opens it ([read the script](
 
 Or by hand: download `SideEye.zip` from the [latest release](https://github.com/ishmael07/SideEye/releases/latest), drag
 SideEye to Applications and open it. SideEye isn't notarized by Apple yet, so macOS blocks the first launch of a
-browser download: open **System Settings → Privacy & Security** and choose **Open Anyway**.
+browser download: try to open it once, dismiss the warning, then open **System Settings → Privacy & Security** and choose
+**Open Anyway**. (Or clear the flag yourself: `xattr -dr com.apple.quarantine /Applications/SideEye.app`.)
 
 SideEye lives in the menu bar (the eye icon). macOS asks for camera access on first launch.
 
