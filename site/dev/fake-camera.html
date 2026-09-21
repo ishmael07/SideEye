@@ -6,11 +6,13 @@
 import { drawHead, drawRoom, PEOPLE } from "../head.js";
 const W = 640, H = 480, FPS = 15, canvas = Object.assign(document.createElement("canvas"), { width: W, height: H }), ctx = canvas.getContext("2d");
 // [until second, yaw, pitch, present]; yaw > 0 = the person turns to THEIR left
-const SCRIPT = [[6, 0, 0, 1], [9, 42, 0, 1], [11, 0, 0, 1], [14, 0, 30, 1], [16, 0, 0, 1], [18.5, 0, 0, 0], [20, 0, 0, 1]];
+const SWEEP = new URLSearchParams(location.search).has("sweep");     // ?sweep renders the shot list for dev/make-person.sh instead of the camera test
+const SCRIPT = SWEEP ? [[1.5, 0, 0, 1], [4, 58, 0, 1], [5.5, 0, 0, 1], [8, -58, 0, 1], [9.5, 0, 0, 1], [11, 0, 32, 1], [12.5, 0, -24, 1], [14, 0, 0, 1]]
+  : [[6, 0, 0, 1], [9, 42, 0, 1], [11, 0, 0, 1], [14, 0, 30, 1], [16, 0, 0, 1], [18.5, 0, 0, 0], [20, 0, 0, 1]];
 let yaw = 0, pitch = 0, shown = 1; const lines = [];
 for (let f = 0; f < SCRIPT.at(-1)[0] * FPS; f++) {
   const t = f / FPS, [, toYaw, toPitch, present] = SCRIPT.find(step => t < step[0]);
-  yaw += (toYaw - yaw) * 0.22; pitch += (toPitch - pitch) * 0.22; shown += (present - shown) * 0.3;
+  const ease = SWEEP ? 0.07 : 0.22; yaw += (toYaw - yaw) * ease; pitch += (toPitch - pitch) * ease; shown += (present - shown) * 0.3;
   ctx.setTransform(-1, 0, 0, 1, W, 0);            // a real camera is not a mirror
   drawRoom(ctx, W, H);
   if (shown > 0.02) drawHead(ctx, { x: W * (0.5 - 1.2 * (1 - shown)), y: H * 0.46, scale: H / 100 * 2.7, yaw, pitch, roll: 0, gazeX: 0, gazeY: 0, blink: 0, breath: 0, dim: 1, ...PEOPLE.me });

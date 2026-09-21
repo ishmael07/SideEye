@@ -266,13 +266,12 @@
     </div>
   </div>
 
-  <footer><span>SideEye · macOS 14 or later · Demo head scan by <a href="http://www.ir-ltd.net/" target="_blank" rel="noopener">Lee Perry-Smith</a>, CC BY 3.0</span><a data-link="author" href="#">@ishmael07</a></footer>
+  <footer><span>SideEye · macOS 14 or later</span><a data-link="author" href="#">@ishmael07</a></footer>
 </div>
 
 <script type="module">
 import { drawHead, drawRoom, drawFeatures, poseHead, PEOPLE } from "./head.js";
 import { createHeadGL } from "./head-gl.js";
-import { loadScan } from "./head-scan.js";
 // ---- links: change these in one place -------------------------------------
 const GITHUB = "https://github.com/ishmael07/sideeye";
 const LINKS = { github: GITHUB, download: GITHUB + "/releases/latest", author: "https://github.com/ishmael07" };
@@ -385,11 +384,7 @@ syncControls();
 
 // ---- camera preview: a simulated person (see head.js), or your own video in camera mode ----
 const layer = document.createElement("canvas"), shade = createHeadGL();
-// Best first: a 3D scan of a real person (loads in the background), then the built head shaded with WebGL, then flat canvas triangles.
-let scan = null;
-loadScan().then(loaded => { scan = loaded; }).catch(error => console.warn("SideEye demo: the head scan didn't load, using the built head.", error));
 function drawPerson(ctx, person, w, h) {
-  if (scan) { ctx.drawImage(scan.shade(person, w, h), 0, 0); return scan.features(ctx, person); }
   if (!shade) return drawHead(ctx, person);
   const box = poseHead(person); ctx.drawImage(shade(person, w, h), 0, 0); drawFeatures(ctx, person); return box;
 }
@@ -410,17 +405,17 @@ function drawPreview(dt) {
   const t = life.t, unit = h / 100, boxes = [];
   if (shown.them > 0.01) {                         // the side-eyer leans in from behind your shoulder
     const lean = 1 - shown.them, them = { x: w * (0.77 + 0.38 * lean), y: h * (0.33 + 0.05 * lean) + Math.sin(t * 1.9) * unit * 0.5, scale: unit * 1.3, dim: 0.6,
-      yaw: -22 + 30 * lean + Math.sin(t * 0.8) * 2, pitch: 7, roll: -5 + 8 * lean, gazeX: 0.5, gazeY: 0.25, blink: 0, breath: 0, skinTint: [0.62, 0.52, 0.47], ...PEOPLE.them };
+      yaw: -22 + 30 * lean + Math.sin(t * 0.8) * 2, pitch: 7, roll: -5 + 8 * lean, gazeX: 0.5, gazeY: 0.25, blink: 0, breath: 0, ...PEOPLE.them };
     people.globalAlpha = Math.min(1, shown.them * 1.6); boxes.push([drawPerson(people, them, w, h), "rgb(255,69,58)", shown.them]); people.globalAlpha = 1;
   }
   if (shown.me > 0.01) {
     const gone = 1 - shown.me, lead = clamp((target.yaw - pose.yaw) / 22, -1, 1), leadY = clamp((target.pitch - pose.pitch) / 18, -1, 1);
     const me = { x: w * (0.45 - 1.2 * gone * gone), y: h * 0.46 + Math.sin(t * 1.1) * unit * 0.35, scale: unit * 2.7, dim: 1,
       yaw: pose.yaw + 1.5 * Math.sin(t * 0.63) + 0.8 * Math.sin(t * 1.37 + 1) + 60 * gone, pitch: pose.pitch + 1.1 * Math.sin(t * 0.81 + 2), roll: -pose.yaw * 0.07 + 0.9 * Math.sin(t * 0.47),
-      gazeX: clamp(-(pose.yaw / 38) - lead * 0.8, -1, 1), gazeY: clamp(pose.pitch / 30 + leadY * 0.7, -1, 1), blink: life.blink, breath: Math.sin(t * 1.5) * unit * 0.5, skinTint: [1, 1, 1], ...PEOPLE.me };
+      gazeX: clamp(-(pose.yaw / 38) - lead * 0.8, -1, 1), gazeY: clamp(pose.pitch / 30 + leadY * 0.7, -1, 1), blink: life.blink, breath: Math.sin(t * 1.5) * unit * 0.5, ...PEOPLE.me };
     boxes.push([drawPerson(people, me, w, h), "rgb(48,209,88)", shown.me]);
   }
-  ctx.filter = `blur(${((scan ? 0.3 : 0.55) * dpr).toFixed(2)}px)`; ctx.drawImage(layer, 0, 0); ctx.filter = "none";   // webcams are soft; this also melts the facets
+  ctx.filter = `blur(${(0.55 * dpr).toFixed(2)}px)`; ctx.drawImage(layer, 0, 0); ctx.filter = "none";   // webcams are soft; this also melts the facets
   const vignette = ctx.createRadialGradient(w / 2, h / 2, h * 0.35, w / 2, h / 2, w * 0.75);
   vignette.addColorStop(0, "rgba(0,0,0,0)"); vignette.addColorStop(1, "rgba(0,0,0,.45)"); ctx.fillStyle = vignette; ctx.fillRect(0, 0, w, h);
   ctx.lineWidth = Math.max(1.5, w / 190);
@@ -439,7 +434,7 @@ const SCRIPT_LENGTH = SCRIPT.reduce((n, step) => n + step[0], 0);
 const velocity = { yaw: 0, pitch: 0 };
 // Measured with dev/test-camera.sh: a 42° left turn reads +30° and looking down reads negative, hence the gain and the flip.
 const YAW_SIGN = 1.2, PITCH_SIGN = -1.2;
-let mode = "auto", scriptTime = 0, lastPointer = 0, override = null, calibrating = false;
+let mode = "auto", scriptTime = 0, override = null, calibrating = false;
 const camera = { on: false };
 const frozen = params.get("state");   // ?state=left|right|down|intruder|away|clear for stills
 
@@ -451,7 +446,7 @@ function setMode(next) {
   if (!override && mode !== "camera") { pose.present = true; pose.intruder = false; }
 }
 $("modeAuto").onclick = () => setMode("auto");
-$("modeCursor").onclick = () => { lastPointer = performance.now(); target.yaw = target.pitch = 0; setMode("cursor"); };
+$("modeCursor").onclick = () => { target.yaw = target.pitch = 0; setMode("cursor"); };
 
 function autoplay(dt) {
   scriptTime += dt;
@@ -463,10 +458,8 @@ function autoplay(dt) {
 }
 
 addEventListener("pointermove", e => {
-  if (frozen || mode === "camera" || e.pointerType === "touch") return;
-  const r = screen.getBoundingClientRect(), over = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
-  if (mode === "auto") { if (!over) return; setMode("cursor"); }       // touching the screen takes over from the simulation
-  lastPointer = performance.now();
+  if (frozen || mode !== "cursor" || e.pointerType === "touch") return;   // modes only change when you click one
+  const r = screen.getBoundingClientRect();
   if (e.target.closest?.("button, a, .controls")) { target.yaw = target.pitch = 0; return; }   // reaching for a control isn't looking away
   const axis = (pos, lo, size) => {                      // on the screen: a relaxed glance. Off it: a real turn.
     const n = (pos - lo - size / 2) / (size / 2);
@@ -479,7 +472,7 @@ addEventListener("pointermove", e => {
 // "Walk away" and "Someone behind you" work in every mode, including over your real camera.
 function pulse(kind, ms, el) {
   clearTimeout(override?.timer); override?.el.setAttribute("aria-pressed", "false");
-  pose.intruder = kind === "intruder"; pose.present = kind !== "away"; lastPointer = performance.now() + ms;
+  pose.intruder = kind === "intruder"; pose.present = kind !== "away";
   el.setAttribute("aria-pressed", "true");
   override = { el, timer: setTimeout(() => { el.setAttribute("aria-pressed", "false"); override = null; if (mode !== "camera") { pose.intruder = false; pose.present = true; } }, ms) };
 }
@@ -565,7 +558,6 @@ function frame(now) {
   const dt = Math.min((now - last) / 1000, 0.05); last = now;
   if (frozen && STILLS[frozen]) { [target.yaw, target.pitch] = STILLS[frozen]; pose.present = !!STILLS[frozen][2]; pose.intruder = !!STILLS[frozen][3]; }
   else if (camera.on) camera.step();
-  else if (mode === "cursor" && now - lastPointer > 7000) setMode("auto");
   else if (mode === "auto") autoplay(dt);
 
   // A critically damped spring, so the head accelerates and settles like a neck does.
