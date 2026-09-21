@@ -442,6 +442,12 @@ function drawPerson(ctx, person, w, h) {
   const box = poseHead(person); ctx.drawImage(shade(person, w, h), 0, 0); drawFeatures(ctx, person); return box;
 }
 const meshCanvas = $("mesh"), boxCanvas = $("boxes"), shown = { me: 1, them: 0 }, life = { t: 0, blinkAt: 2.4, blink: 0 };
+const grain = (() => {
+  const tile = Object.assign(document.createElement("canvas"), { width: 128, height: 128 }), g = tile.getContext("2d"), pixels = g.createImageData(128, 128);
+  for (let i = 0; i < pixels.data.length; i += 4) { const v = Math.random() * 255; pixels.data[i] = pixels.data[i + 1] = pixels.data[i + 2] = v; pixels.data[i + 3] = 22; }
+  g.putImageData(pixels, 0, 0);
+  return meshCanvas.getContext("2d").createPattern(tile, "repeat");
+})();
 function drawPreview(dt) {
   const k = 1 - Math.exp(-dt / 0.22);
   shown.me += ((pose.present ? 1 : 0) - shown.me) * k; shown.them += ((pose.intruder ? 1 : 0) - shown.them) * k;
@@ -469,6 +475,11 @@ function drawPreview(dt) {
     boxes.push([drawPerson(people, me, w, h), "rgb(48,209,88)", shown.me]);
   }
   ctx.filter = `blur(${((avatars.me ? 0.3 : 0.55) * dpr).toFixed(2)}px)`; ctx.drawImage(layer, 0, 0); ctx.filter = "none";   // webcams are soft; this also melts the facets
+  if (avatars.me) {                                  // a little sensor noise, new every frame, the way a webcam in a dim room looks
+    ctx.globalAlpha = 0.55; ctx.fillStyle = grain;
+    const ox = Math.floor(Math.random() * 128), oy = Math.floor(Math.random() * 128);
+    ctx.translate(-ox, -oy); ctx.fillRect(0, 0, w + 128, h + 128); ctx.translate(ox, oy); ctx.globalAlpha = 1;
+  }
   const vignette = ctx.createRadialGradient(w / 2, h / 2, h * 0.35, w / 2, h / 2, w * 0.75);
   vignette.addColorStop(0, "rgba(0,0,0,0)"); vignette.addColorStop(1, "rgba(0,0,0,.45)"); ctx.fillStyle = vignette; ctx.fillRect(0, 0, w, h);
   ctx.lineWidth = Math.max(1.5, w / 190);

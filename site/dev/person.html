@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- Dev tool: the demo's person, large, in a row of poses. ?who=me|them  ?t=seconds  ?poses=yaw:pitch[:blink[:lookX:lookY]],…
+     Not deployed (the Pages workflow removes site/dev). -->
+<meta charset="utf-8"><title>loading</title><body style="margin:0;background:#111">
+<canvas id="out"></canvas>
+<script type="module">
+import { loadPerson } from "../person-gl.js";
+import { drawRoom } from "../head.js";
+const q = new URLSearchParams(location.search), who = q.get("who") || "me", t = +(q.get("t") || 3);
+const poses = (q.get("poses") || "0:0,32:0,-50:-6,0:28").split(",").map(p => p.split(":").map(Number));
+const W = 560, H = 420, out = document.getElementById("out"), ctx = out.getContext("2d");
+out.width = W * poses.length; out.height = H;
+const shade = await loadPerson(new URL(`../assets/person/${who}/`, import.meta.url));
+poses.forEach(([yaw, pitch, blink = 0, lookX, lookY], i) => {
+  const layer = Object.assign(document.createElement("canvas"), { width: W, height: H }), c = layer.getContext("2d");
+  drawRoom(c, W, H);
+  const person = { x: W * 0.46, y: H * 0.46, scale: H / 100 * 2.7, dim: 1, yaw, pitch, roll: -yaw * 0.07, blink, t, targetYaw: yaw, targetPitch: pitch, look: lookX === undefined ? [0, 4] : [lookX, lookY] };
+  c.drawImage(shade(person, W, H).canvas, 0, 0);
+  ctx.drawImage(layer, i * W, 0);
+});
+document.title = "done";
+</script>

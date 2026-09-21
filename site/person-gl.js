@@ -2,11 +2,13 @@
 // library (MIT licence, see assets/person/CREDITS.md), converted by dev/make-avatar.py.
 //
 // Each frame the skeleton is posed (spine, neck and head share a turn the way a body does; the eyes
-// look, the lids blink, the chest breathes), the mesh is skinned on the CPU (about 2,500 vertices),
-// mirrored like a selfie view, and lit by a small WebGL renderer.
+// look, the lids blink, the chest breathes, the face drifts), the mesh is skinned on the CPU (about 2,500
+// vertices), mirrored like a selfie view, and lit by a small WebGL renderer: a window high to one side, the
+// cool glow of the screen in front, and soft shadows and occlusion from the head onto the neck and shoulders.
 const CAMERA = 58;                                        // camera distance in cm
 const FACE_POINTS = [[0, 7.5, 1], [0, -12.6, 1.5], [-7.3, -2, -3], [7.3, -2, -3], [0, -4.6, 2.6]];   // hairline, chin, cheeks, nose
-const LID_TOP = 1.12, LID_BOTTOM = 0.3;                  // cm of lid travel for a full blink
+const SKULL = [0, 2, -8.5, 10], JAW = [0, -7, -3, 6.2];      // the head as two spheres, relative to the eyes (cm)
+const LID_TOP = 1.12, LID_BOTTOM = 0.3, LID_REST = 0.13;  // a relaxed eye is not wide open                  // cm of lid travel for a full blink
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v)), mix = (a, b, t) => a + (b - a) * t, RAD = Math.PI / 180;
 const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
 
@@ -24,6 +26,7 @@ const FRAGMENT = `
 precision highp float;
 uniform sampler2D headMap; uniform sampler2D bodyMap; uniform sampler2D hairMap; uniform sampler2D headNormal;
 uniform float dim; uniform float soft;                     // soft = 1 on the blended pass that draws the hair's edges
+uniform vec4 skull; uniform vec4 jaw;                      // the head as two spheres (xyz, radius): what it shadows, it shadows softly
 varying vec3 vWorld; varying vec3 vNormal; varying vec3 vUvm;
 vec3 bumped(vec3 n, vec2 uv) {                             // tangent frame from derivatives, so the mesh needs no tangents
   vec3 dp1 = dFdx(vWorld), dp2 = dFdy(vWorld); vec2 duv1 = dFdx(uv), duv2 = dFdy(uv);
@@ -33,34 +36,54 @@ vec3 bumped(vec3 n, vec2 uv) {                             // tangent frame from
   return normalize(mat3(t * inv, b * inv, n) * vec3(m.xy * 0.8, m.z));
 }
 float wrapped(vec3 n, vec3 l, float w) { return clamp((dot(n, l) + w) / (1.0 + w), 0.0, 1.0); }
+// How much of light L reaches p past sphere s. Points on the sphere itself (the face) are left alone.
+float shadowOf(vec4 s, vec3 p, vec3 L) {
+  vec3 oc = s.xyz - p; float t = dot(oc, L), away = smoothstep(s.w * 1.02, s.w * 1.45, length(oc));
+  if (t <= 0.0) return 1.0;
+  float d = length(oc - L * t), penumbra = 0.28 + 0.025 * t;                       // softer the further the shadow falls
+  return mix(1.0, smoothstep(s.w * (1.0 - penumbra), s.w * (1.0 + penumbra), d), away);
+}
+// How much of the sky sphere s hides from a surface at p facing n.
+float skyPast(vec4 s, vec3 p, vec3 n) {
+  vec3 oc = s.xyz - p; float d2 = dot(oc, oc), away = smoothstep(s.w * 1.02, s.w * 1.45, sqrt(d2));
+  return 1.0 - away * (0.4 + 0.6 * clamp(dot(n, oc) / sqrt(d2), 0.0, 1.0)) * min(1.0, s.w * s.w / d2) * 0.95;   // by solid angle, more if it faces the sphere
+}
 void main() {
   vec2 uv = vUvm.xy; float material = vUvm.z;
   vec3 geo = normalize(vNormal), view = vec3(0.0, 0.0, 1.0);
   if (material > 1.5 && geo.z < 0.0) geo = -geo;            // hair cards are seen from both sides
-  vec3 key = normalize(vec3(-0.5, 0.42, 0.76)), fill = normalize(vec3(0.75, 0.05, 0.6)), h = normalize(key + view);
+  vec3 key = normalize(vec3(-0.46, 0.6, 0.65)), fill = normalize(vec3(0.0, -0.12, 1.0)), h = normalize(key + view);   // a window, high and to one side; and the screen they are looking at
+  float sun = shadowOf(skull, vWorld, key) * shadowOf(jaw, vWorld, key), sky = skyPast(skull, vWorld, geo) * skyPast(jaw, vWorld, geo);
+  vec3 ambient = mix(vec3(0.13, 0.11, 0.1), vec3(0.15, 0.17, 0.22), geo.y * 0.5 + 0.5) * sky * sky;
+  vec3 screen = vec3(0.62, 0.7, 0.86) * wrapped(geo, fill, 0.25) * 0.5 * sky;               // cool, soft, straight ahead   // cool from the window above, warm bounce from the desk
   vec3 colour; float alpha = 1.0;
   if (material > 1.5) {                                    // hair and lashes: alpha-textured cards
     vec4 hair = texture2D(hairMap, uv); alpha = hair.a;
     if (soft < 0.5 ? alpha < 0.6 : alpha >= 0.6) discard;                 // solid strands first, their soft edges in the blended pass
     vec3 albedo = pow(hair.rgb, vec3(2.2));
-    colour = albedo * (wrapped(geo, key, 0.6) * 2.0 + wrapped(geo, fill, 0.6) * 0.4 + 0.22) + vec3(0.5, 0.42, 0.34) * pow(max(dot(geo, h), 0.0), 12.0) * 0.12;
+    colour = albedo * (wrapped(geo, key, 0.6) * 2.0 + screen + ambient) + vec3(0.5, 0.42, 0.34) * pow(max(dot(geo, h), 0.0), 12.0) * 0.12;
   } else if (material > 0.5) {                             // head: skin, plus the eyeballs and mouth that live in the same texture
     vec3 albedo = pow(texture2D(headMap, uv).rgb, vec3(2.2));
     bool eye = uv.x < 0.36 && uv.y < 0.2 && uv.x > 0.18;
     vec3 fine = eye ? geo : bumped(geo, uv);
     // Red light travels furthest under skin, so red sees a smoother normal than blue.
     vec3 nr = normalize(mix(fine, geo, 0.7)), ng = normalize(mix(fine, geo, 0.4));
-    vec3 lit = vec3(wrapped(nr, key, 0.5), wrapped(ng, key, 0.34), wrapped(fine, key, 0.22));
-    colour = albedo * (lit * vec3(1.0, 0.98, 0.95) * 2.2 + wrapped(geo, fill, 0.6) * vec3(0.5, 0.38, 0.3) * 0.7 + vec3(0.2, 0.21, 0.25));
+    vec3 lit = vec3(wrapped(nr, key, 0.5), wrapped(ng, key, 0.34), wrapped(fine, key, 0.22)) * mix(vec3(1.0), vec3(sun * 0.85 + 0.15, sun, sun), 1.0);   // shadows on skin keep a little red
+    colour = albedo * (lit * vec3(1.0, 0.97, 0.93) * 2.0 + screen + ambient);
+    if (eye) {                                             // an eyeball sits in a socket: the lid shades its top, the corners fall away, and it is never paper white
+      float lidShade = smoothstep(0.62, -0.05, geo.y), socket = 1.0 - 0.55 * pow(clamp(1.0 - geo.z, 0.0, 1.0), 1.4);
+      colour *= (0.34 + 0.66 * lidShade) * socket * vec3(0.9, 0.86, 0.84);
+    }
     float fres = 0.03 + 0.97 * pow(clamp(1.0 - dot(fine, view), 0.0, 1.0), 5.0);
-    colour += eye ? vec3(1.0) * pow(max(dot(geo, h), 0.0), 90.0) * 1.4                          // a wet highlight on the eye
+    colour += eye ? vec3(1.0) * pow(max(dot(geo, h), 0.0), 140.0) * 1.1 * sun                   // a small wet highlight on the eye
                   : vec3(1.0, 0.98, 0.96) * (pow(max(dot(fine, h), 0.0), 36.0) * 0.18 + pow(max(dot(fine, h), 0.0), 8.0) * 0.05) * (0.4 + fres * 2.0);
     colour += vec3(0.5, 0.62, 0.9) * pow(clamp(1.0 - geo.z, 0.0, 1.0), 3.0) * step(geo.x, 0.15) * 0.16;   // cool rim from the window
   } else {                                                 // body: clothes and the skin of the neck
     vec3 albedo = pow(texture2D(bodyMap, uv).rgb, vec3(2.2));
-    colour = albedo * (wrapped(geo, key, 0.4) * 2.1 + wrapped(geo, fill, 0.5) * 0.4 + 0.2);
+    colour = albedo * (wrapped(geo, key, 0.4) * 1.9 * sun + screen + ambient);
   }
   colour = pow(max(colour, 0.0) * dim / (1.0 + 0.3 * max(colour, 0.0) * dim), vec3(1.0 / 2.2));
+  colour = mix(vec3(dot(colour, vec3(0.299, 0.587, 0.114))), colour, 0.84) * 0.95 + 0.025;   // a webcam's grade: less saturated, blacks a little lifted
   gl_FragColor = vec4(colour * alpha, alpha);
 }`;
 
@@ -134,7 +157,7 @@ export async function loadPerson(folder) {
     if (image.width > 4 && (image.width & (image.width - 1)) === 0) { gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); }
     else { gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); }
   });
-  const u = Object.fromEntries(["place", "size", "dim", "soft", "headMap", "bodyMap", "hairMap", "headNormal"].map(name => [name, gl.getUniformLocation(program, name)]));
+  const u = Object.fromEntries(["place", "size", "dim", "soft", "skull", "jaw", "headMap", "bodyMap", "hairMap", "headNormal"].map(name => [name, gl.getUniformLocation(program, name)]));
   ["headMap", "bodyMap", "hairMap", "headNormal"].forEach((name, unit) => gl.uniform1i(u[name], unit));
   gl.enable(gl.DEPTH_TEST); gl.clearColor(0, 0, 0, 0); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
@@ -175,13 +198,25 @@ export async function loadPerson(folder) {
     life.lastGaze = wantX;
     if (t >= life.blinkAt) { life.blinkFrom = t; life.blinkAt = t + 2.2 + Math.random() * 4 + (Math.random() < 0.15 ? -1.9 : 0); }
     const phase = t - life.blinkFrom, blink = phase < 0.075 ? phase / 0.075 : phase < 0.11 ? 1 : Math.max(0, 1 - (phase - 0.11) / 0.16);
-    const lid = clamp(Math.max(blink * blink * (3 - 2 * blink), person.blink ?? 0) + Math.max(0, life.gazeY) / 55, 0, 1);   // lids follow a downward look
+    const lid = clamp(Math.max(LID_REST + (1 - LID_REST) * blink * blink * (3 - 2 * blink), person.blink ?? 0) + Math.max(0, life.gazeY) / 55 - Math.max(0, -life.gazeY) / 90, 0, 1);   // lids follow the look up and down
     for (const side of ["L", "R"]) {
       pose(side + "Eye", turn(life.gazeX, life.gazeY, 0));
       pose(side + "EyeBlinkTop", still, 0, -LID_TOP * lid, -0.12 * lid); pose(side + "EyeBlinkBottom", still, 0, LID_BOTTOM * lid, 0);
     }
-    const lift = 0.22 * smooth(4, 22, -P - life.gazeY * 0.4) + 0.04 * sway;          // brows rise a little with an upward look
-    for (const brow of ["LInnerEyebrow", "RInnerEyebrow", "LOuterEyebrow", "ROuterEyebrow", "MMiddleEyebrow"]) pose(brow, still, 0, lift, 0);
+    // The face is never quite still: slow drifts a viewer doesn't notice but would miss.
+    const drift = (rate, phase) => Math.sin(t * rate + phase) * 0.6 + Math.sin(t * rate * 2.3 + phase * 1.7) * 0.4;
+    const focus = onScreen * (0.5 + 0.5 * drift(0.21, 1));                          // concentrating on the screen draws the brows in and down
+    const lift = 0.22 * smooth(4, 22, -P - life.gazeY * 0.4) + 0.05 * drift(0.17, 2);  // and they rise with an upward look
+    for (const [side, sign] of [["L", 1], ["R", -1]]) {
+      pose(side + "InnerEyebrow", still, -sign * 0.07 * focus, lift - 0.09 * focus + 0.02 * drift(0.31, sign), 0);
+      pose(side + "OuterEyebrow", still, 0, lift * 0.7 + 0.03 * drift(0.27, 3 + sign), 0);
+      pose(side + "MouthCorner", still, sign * 0.03 * drift(0.13, 5 + sign), 0.035 * drift(0.11, 4) + 0.02 * drift(0.19, sign), 0);
+      pose(side + "Cheek", still, 0, 0.05 * lid + 0.02 * drift(0.15, 6), 0);         // cheeks lift a touch as the eyes narrow
+    }
+    pose("MMiddleEyebrow", still, 0, lift - 0.06 * focus, 0);
+    const swallow = Math.max(0, Math.sin(t * 0.23 + 2) - 0.985) / 0.015;            // now and then
+    pose("MJaw", turn(0, 0.12 + 0.12 * drift(0.09, 7) + 0.9 * swallow, 0), 0, -0.05 * swallow, 0);   // relaxed, not clamped
+    pose("MNose", still, 0, 0.012 * breath, 0);
     solve();
   }
 
@@ -204,6 +239,9 @@ export async function loadPerson(folder) {
     animate(person); skin();
     gl.viewport(0, 0, width, height); gl.depthMask(true); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);   // clear honours the depth mask the hair pass leaves off
     gl.bindBuffer(gl.ARRAY_BUFFER, movingBuffer); gl.bufferSubData(gl.ARRAY_BUFFER, 0, moving);
+    const headBone = bones[named.Head].skin;
+    for (const [uniform, [x, y, z, r]] of [[u.skull, SKULL], [u.jaw, JAW]])                 // where the head is now, mirrored like the mesh
+      gl.uniform4f(uniform, -(headBone[0] * x + headBone[4] * y + headBone[8] * z + headBone[12]), headBone[1] * x + headBone[5] * y + headBone[9] * z + headBone[13], headBone[2] * x + headBone[6] * y + headBone[10] * z + headBone[14], r);
     gl.uniform3f(u.place, person.x, person.y, person.scale); gl.uniform2f(u.size, width, height); gl.uniform1f(u.dim, person.dim);
     gl.disable(gl.BLEND); gl.uniform1f(u.soft, 0); gl.drawElements(gl.TRIANGLES, rig.indices, gl.UNSIGNED_SHORT, 0);                      // everything solid
     gl.enable(gl.BLEND); gl.depthMask(false); gl.uniform1f(u.soft, 1);
