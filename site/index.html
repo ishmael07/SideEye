@@ -17,8 +17,8 @@
   body { background: var(--bg); color: var(--ink); font: 19px/1.45 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
   a { color: inherit; text-decoration: none; }
   button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-  .wrap { width: min(1180px, 100% - 48px); margin-inline: auto; }
-  .wide { width: min(1720px, 100% - 56px); margin-inline: auto; }
+  /* One centred grid for the whole page, so the headline, the feature rows and the footer share a left edge. */
+  .wrap, .wide { width: min(1400px, 100% - clamp(48px, 11vw, 220px)); margin-inline: auto; }
 
   nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
   .brand { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
@@ -34,8 +34,8 @@
   .textlink::after { content: " ›"; }
 
   /* Hero: the pitch and the controls on the left, the demo as large as the window allows on the right. */
-  .hero { display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: clamp(48px, 7vw, 128px); align-items: center; min-height: min(calc(100vh - 72px), 980px); padding: 24px 0 72px; }
-  h1 { font-size: clamp(44px, 4.4vw, 72px); line-height: 1.02; font-weight: 600; letter-spacing: -0.035em; }
+  .hero { display: grid; grid-template-columns: minmax(280px, 350px) 1fr; gap: clamp(40px, 5vw, 96px); align-items: center; min-height: min(calc(100vh - 72px), 820px); padding: 8px 0 40px; }
+  h1 { font-size: clamp(42px, 4vw, 66px); line-height: 1.02; font-weight: 600; letter-spacing: -0.035em; }
   h1 span { color: #a1a1a6; }
   .lede { margin: 24px 0 36px; color: var(--soft); font-size: clamp(18px, 1.3vw, 21px); line-height: 1.5; }
 
@@ -124,7 +124,7 @@
 
 
   /* ---------- the rest: a few big lines ---------- */
-  section { padding-top: clamp(96px, 13vw, 170px); }
+  section { padding-top: clamp(56px, 7vw, 104px); }
   .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px; border-top: 1px solid var(--line); padding-top: 40px; }
   .three + .three { margin-top: 72px; }
   .three h2 { font-size: clamp(24px, 2.2vw, 30px); letter-spacing: -.02em; font-weight: 600; margin-bottom: 10px; }
