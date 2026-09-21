@@ -4,10 +4,10 @@ set -euo pipefail
 cd "$(dirname "$0")/../build"
 rm -rf dmg SideEye.dmg rw.dmg
 mkdir dmg && cp -R SideEye.app dmg/ && ln -s /Applications dmg/Applications
-cp SideEye.app/Contents/Resources/AppIcon.icns dmg/.VolumeIcon.icns        # the mounted disk wears the app's icon
 hdiutil create -quiet -volname SideEye -srcfolder dmg -fs HFS+ -format UDRW rw.dmg
 mount=$(hdiutil attach -nobrowse -noautoopen rw.dmg | awk -F'\t' '/\/Volumes\//{print $3}')
-SetFile -a C "$mount" 2>/dev/null || true
+# The mounted disk wears the app's icon. (hdiutil drops this file from -srcfolder, so it is added after mounting.)
+cp SideEye.app/Contents/Resources/AppIcon.icns "$mount/.VolumeIcon.icns" && SetFile -a C "$mount" 2>/dev/null || true
 # Icon layout is cosmetic: if Finder scripting isn't permitted the DMG still works, just unarranged.
 perl -e 'alarm 25; exec @ARGV' osascript >/dev/null 2>&1 <<OSA || echo "note: Finder layout skipped"
 tell application "Finder"
