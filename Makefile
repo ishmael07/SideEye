@@ -4,7 +4,7 @@ CLT_DEV := /Library/Developer/CommandLineTools/Library/Developer
 TEST_FLAGS := -Xswiftc -F$(CLT_DEV)/Frameworks -Xlinker -F$(CLT_DEV)/Frameworks \
 	-Xlinker -rpath -Xlinker $(CLT_DEV)/Frameworks -Xlinker -rpath -Xlinker $(CLT_DEV)/usr/lib
 
-.PHONY: app run demo test clean
+.PHONY: app release run demo test clean
 
 app:
 	swift build -c release --product SideEye
@@ -14,6 +14,20 @@ app:
 	cp Resources/Info.plist $(APP)/Contents/Info.plist
 	if [ -f Resources/AppIcon.icns ]; then cp Resources/AppIcon.icns $(APP)/Contents/Resources/; fi
 	codesign --force --sign - --identifier app.sideeye.SideEye $(APP)
+
+# Universal (Apple silicon + Intel) build, zipped for a GitHub release. Without Xcode each architecture
+# is built on its own and merged with lipo.
+release:
+	swift build -c release --product SideEye
+	swift build -c release --product SideEye --triple x86_64-apple-macosx14.0
+	rm -rf $(APP) build/SideEye.zip
+	mkdir -p $(APP)/Contents/MacOS $(APP)/Contents/Resources
+	lipo -create .build/arm64-apple-macosx/release/SideEye .build/x86_64-apple-macosx/release/SideEye -output $(APP)/Contents/MacOS/SideEye
+	cp Resources/Info.plist $(APP)/Contents/Info.plist
+	cp Resources/AppIcon.icns $(APP)/Contents/Resources/
+	codesign --force --sign - --identifier app.sideeye.SideEye $(APP)
+	cd build && ditto -c -k --keepParent SideEye.app SideEye.zip
+	@lipo -archs $(APP)/Contents/MacOS/SideEye; ls -lh build/SideEye.zip
 
 run: app
 	-pkill -x SideEye

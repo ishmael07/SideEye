@@ -37,6 +37,11 @@
   .hero { display: grid; grid-template-columns: minmax(280px, 350px) 1fr; gap: clamp(40px, 5vw, 96px); align-items: center; min-height: min(calc(100vh - 72px), 820px); padding: 8px 0 40px; }
   h1 { font-size: clamp(42px, 4vw, 66px); line-height: 1.02; font-weight: 600; letter-spacing: -0.035em; }
   h1 span { color: #a1a1a6; }
+  .actions { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  .gh { display: inline-flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 500; }
+  .gh:hover { color: var(--soft); } .gh svg { width: 20px; height: 20px; }
+  .gh .stars { color: var(--soft); font-variant-numeric: tabular-nums; } .gh .stars::before { content: "★ "; }
+  .meta { margin-top: 18px; color: #a1a1a6; font-size: 15px; }
   .lede { margin: 24px 0 36px; color: var(--soft); font-size: clamp(18px, 1.3vw, 21px); line-height: 1.5; }
 
   /* ---------- demo ---------- */
@@ -129,6 +134,13 @@
   .three + .three { margin-top: 72px; }
   .three h2 { font-size: clamp(24px, 2.2vw, 30px); letter-spacing: -.02em; font-weight: 600; margin-bottom: 10px; }
   .three p { color: var(--soft); font-size: clamp(17px, 1.4vw, 20px); line-height: 1.5; }
+  .install { border-top: 1px solid var(--line); padding-top: 40px; display: grid; grid-template-columns: minmax(260px, 1fr) 2fr; gap: 24px 56px; align-items: start; }
+  .install h2 { font-size: clamp(24px, 2.2vw, 30px); letter-spacing: -.02em; font-weight: 600; margin-bottom: 10px; }
+  .install p { color: var(--soft); font-size: clamp(17px, 1.4vw, 20px); line-height: 1.5; } .install p a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #c7c7cc; }
+  .command { display: flex; align-items: center; gap: 12px; background: var(--fill); border-radius: 14px; padding: 8px 8px 8px 20px; min-width: 0; }
+  .command code { font: 15px/1.5 ui-monospace, "SF Mono", Menlo, monospace; overflow-x: auto; white-space: nowrap; flex: 1; padding: 8px 0; scrollbar-width: none; }
+  .command button { flex: none; padding: 9px 16px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 15px; font-weight: 500; }
+  .manual { margin-top: 18px; font-size: 16px !important; } .how { min-width: 0; }
   #film video { display: block; width: 100%; border-radius: 14px; box-shadow: 0 0 0 1px rgba(0,0,0,.12); }
   .end { text-align: center; padding: clamp(110px, 14vw, 190px) 0 clamp(90px, 10vw, 140px); }
   .end .eyes { font-size: 84px; line-height: 1; margin-bottom: 18px; }
@@ -148,7 +160,7 @@
     .pop { zoom: 2.2; top: 27.5cqw; right: 9.5cqw; } .pop::before { display: none; }
     .badge b { font-size: 4.6cqw; } .badge span { font-size: 2.5cqw; } .badge svg { width: 9cqw; height: 9cqw; } .badge div { padding: 5cqw 6cqw; border-radius: 4.5cqw; }
     .seg button, .acts button { padding: 9px 14px; font-size: 15px; }
-    .three { grid-template-columns: 1fr; gap: 32px; }
+    .three { grid-template-columns: 1fr; gap: 32px; } .install { grid-template-columns: 1fr; }
 
     nav .links a.opt { display: none; }
   }
@@ -168,7 +180,14 @@
     <div class="pitch">
       <h1>For your eyes <span>only.</span></h1>
       <p class="lede">SideEye is a privacy screen for your Mac. It blurs the display the moment you look away, walk away, or someone looks over your shoulder.</p>
-      <a class="button" data-link="download" href="#">Download for Mac</a>
+      <div class="actions">
+        <a class="button" data-link="download" href="#">Download for Mac</a>
+        <a class="gh" data-link="github" href="#" aria-label="SideEye on GitHub">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 8 0z"/></svg>
+          <span>GitHub</span><span class="stars" id="stars" hidden></span>
+        </a>
+      </div>
+      <p class="meta">Free and open source · macOS 14 or later</p>
     </div>
 
     <div id="stage">
@@ -257,6 +276,27 @@
     </div>
   </section>
 
+  <section id="works-on">
+    <div class="three">
+      <div><h2>Mac</h2><p>macOS 14 Sonoma or later, on Apple silicon and Intel. Any built-in or external webcam.</p></div>
+      <div><h2>Windows</h2><p>Not yet. SideEye is a native Mac app built on Apple's Vision framework. A Windows version would be a separate build.</p></div>
+      <div><h2>iPhone and iPad</h2><p>No. iOS doesn't let an app cover or blur other apps.</p></div>
+    </div>
+  </section>
+
+  <section id="install">
+    <div class="install">
+      <div>
+        <h2>Install</h2>
+        <p>Paste this in Terminal. It downloads the latest release into Applications and opens it. The script is <a data-link="installer" href="#">in the repo</a> if you want to read it first.</p>
+      </div>
+      <div class="how">
+      <div class="command"><code id="command">curl -fsSL https://raw.githubusercontent.com/ishmael07/SideEye/main/install.sh | bash</code><button id="copy" aria-label="Copy the install command">Copy</button></div>
+      <p class="manual">Prefer to do it by hand? <a data-link="download" href="#">Download the zip</a>, drag SideEye to Applications and open it. SideEye isn't notarized by Apple yet, so macOS will stop it the first time: go to System Settings → Privacy &amp; Security and choose Open Anyway.</p>
+      </div>
+    </div>
+  </section>
+
   <div class="end">
     <div class="eyes">👀</div>
     <h2>Free for Mac.</h2>
@@ -274,9 +314,17 @@ import { drawHead, drawRoom, drawFeatures, poseHead, PEOPLE } from "./head.js";
 import { createHeadGL } from "./head-gl.js";
 import { loadPerson } from "./person-gl.js";
 // ---- links: change these in one place -------------------------------------
-const GITHUB = "https://github.com/ishmael07/sideeye";
-const LINKS = { github: GITHUB, download: GITHUB + "/releases/latest", author: "https://github.com/ishmael07" };
-document.querySelectorAll("[data-link]").forEach(a => { a.href = LINKS[a.dataset.link]; a.target = "_blank"; a.rel = "noopener"; });
+const REPO = "ishmael07/SideEye", GITHUB = "https://github.com/" + REPO;
+const LINKS = { github: GITHUB, download: GITHUB + "/releases/latest/download/SideEye.zip", installer: GITHUB + "/blob/main/install.sh", author: "https://github.com/ishmael07" };
+document.querySelectorAll("[data-link]").forEach(a => { a.href = LINKS[a.dataset.link]; if (a.dataset.link !== "download") { a.target = "_blank"; a.rel = "noopener"; } });
+
+// Star count next to the GitHub link; stays hidden if the API isn't reachable.
+fetch("https://api.github.com/repos/" + REPO).then(r => r.ok ? r.json() : null).then(repo => {
+  if (repo?.stargazers_count > 0) { const el = document.getElementById("stars"); el.textContent = repo.stargazers_count.toLocaleString(); el.hidden = false; }
+}).catch(() => {});
+document.getElementById("copy").onclick = async event => {
+  try { await navigator.clipboard.writeText(document.getElementById("command").textContent); event.target.textContent = "Copied"; setTimeout(() => { event.target.textContent = "Copy"; }, 1600); } catch { /* clipboard blocked: the text is selectable */ }
+};
 
 // The film section appears only if demo.mp4 exists next to this file.
 fetch("demo.mp4", { method: "HEAD" }).then(r => { if (r.ok) document.getElementById("film").hidden = false; }).catch(() => {});
