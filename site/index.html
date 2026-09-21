@@ -412,14 +412,14 @@ function drawPreview(dt) {
   const t = life.t, unit = h / 100, boxes = [];
   if (shown.them > 0.01) {                         // the side-eyer leans in from behind your shoulder
     const lean = 1 - shown.them, them = { x: w * (0.8 + 0.4 * lean), y: h * (0.35 + 0.05 * lean) + Math.sin(t * 1.9) * unit * 0.5, scale: unit * 1.62, dim: 0.62,
-      yaw: -22 + 30 * lean + Math.sin(t * 0.8) * 2, pitch: 7, roll: -5 + 8 * lean, gazeX: 0.5, gazeY: 0.25, blink: 0, breath: 0, who: "them", ...PEOPLE.them };
+      yaw: 14 - 34 * lean + Math.sin(t * 0.8) * 2, pitch: 6, roll: 4 - 8 * lean, gazeX: 0.5, gazeY: 0.25, blink: 0, breath: 0, who: "them", t: t + 40, lean: 9 * shown.them, stare: true, ...PEOPLE.them };
     people.globalAlpha = Math.min(1, shown.them * 1.6); boxes.push([drawPerson(people, them, w, h), "rgb(255,69,58)", shown.them]); people.globalAlpha = 1;
   }
   if (shown.me > 0.01) {
     const gone = 1 - shown.me, lead = clamp((target.yaw - pose.yaw) / 22, -1, 1), leadY = clamp((target.pitch - pose.pitch) / 18, -1, 1);
     const me = { x: w * (0.45 - 1.2 * gone * gone), y: h * 0.46 + Math.sin(t * 1.1) * unit * 0.35, scale: unit * 2.7, dim: 1,
-      yaw: pose.yaw + 1.5 * Math.sin(t * 0.63) + 0.8 * Math.sin(t * 1.37 + 1) + 60 * gone, pitch: pose.pitch + 1.1 * Math.sin(t * 0.81 + 2), roll: -pose.yaw * 0.07 + 0.9 * Math.sin(t * 0.47),
-      gazeX: clamp(-(pose.yaw / 38) - lead * 0.8, -1, 1), gazeY: clamp(pose.pitch / 30 + leadY * 0.7, -1, 1), blink: life.blink, breath: Math.sin(t * 1.5) * unit * 0.5, who: "me", ...PEOPLE.me };
+      yaw: pose.yaw + 1.5 * Math.sin(t * 0.63) + 0.8 * Math.sin(t * 1.37 + 1) + (avatars.me ? 0 : 60 * gone), pitch: pose.pitch + 1.1 * Math.sin(t * 0.81 + 2), roll: -pose.yaw * 0.07 + 0.9 * Math.sin(t * 0.47),
+      gazeX: clamp(-(pose.yaw / 38) - lead * 0.8, -1, 1), gazeY: clamp(pose.pitch / 30 + leadY * 0.7, -1, 1), blink: avatars.me ? +(params.get("blink") || 0) : life.blink, breath: Math.sin(t * 1.5) * unit * 0.5, who: "me", t, gone, look: params.get("look")?.split(",").map(Number), targetYaw: target.yaw, targetPitch: target.pitch, ...PEOPLE.me };
     boxes.push([drawPerson(people, me, w, h), "rgb(48,209,88)", shown.me]);
   }
   ctx.filter = `blur(${((avatars.me ? 0.3 : 0.55) * dpr).toFixed(2)}px)`; ctx.drawImage(layer, 0, 0); ctx.filter = "none";   // webcams are soft; this also melts the facets
