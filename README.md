@@ -20,7 +20,7 @@ curl -fsSL https://raw.githubusercontent.com/ishmael07/SideEye/main/install.sh |
 
 That puts the latest release in `/Applications` and opens it ([read the script](install.sh) first if you like).
 
-Or by hand: download `SideEye.zip` from the [latest release](https://github.com/ishmael07/SideEye/releases/latest), drag
+Or by hand: download [`SideEye.dmg`](https://github.com/ishmael07/SideEye/releases/latest/download/SideEye.dmg), open it, drag
 SideEye to Applications and open it. SideEye isn't notarized by Apple yet, so macOS blocks the first launch of a
 browser download: try to open it once, dismiss the warning, then open **System Settings → Privacy & Security** and choose
 **Open Anyway**. (Or clear the flag yourself: `xattr -dr com.apple.quarantine /Applications/SideEye.app`.)
@@ -64,7 +64,7 @@ Needs only the Xcode Command Line Tools.
 make run       # build build/SideEye.app (ad-hoc signed) and launch it
 make test      # engine unit tests
 make demo      # sweep the shield through every state without using the camera
-make release   # universal (Apple silicon + Intel) build/SideEye.zip
+make release   # universal (Apple silicon + Intel) build/SideEye.dmg and SideEye.zip
 ```
 
 Rebuilding changes the ad-hoc signature, so macOS asks for camera access again after each build.

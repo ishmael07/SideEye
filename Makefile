@@ -15,7 +15,7 @@ app:
 	if [ -f Resources/AppIcon.icns ]; then cp Resources/AppIcon.icns $(APP)/Contents/Resources/; fi
 	codesign --force --sign - --identifier app.sideeye.SideEye $(APP)
 
-# Universal (Apple silicon + Intel) build, zipped for a GitHub release. Without Xcode each architecture
+# Universal (Apple silicon + Intel) build for a GitHub release: SideEye.dmg for people, SideEye.zip for install.sh. Without Xcode each architecture
 # is built on its own and merged with lipo.
 release:
 	swift build -c release --product SideEye
@@ -27,7 +27,8 @@ release:
 	cp Resources/AppIcon.icns $(APP)/Contents/Resources/
 	codesign --force --sign - --identifier app.sideeye.SideEye $(APP)
 	cd build && ditto -c -k --keepParent SideEye.app SideEye.zip
-	@lipo -archs $(APP)/Contents/MacOS/SideEye; ls -lh build/SideEye.zip
+	./scripts/make-dmg.sh
+	@lipo -archs $(APP)/Contents/MacOS/SideEye; ls -lh build/SideEye.zip build/SideEye.dmg
 
 run: app
 	-pkill -x SideEye

@@ -172,7 +172,7 @@
     <a class="brand" href="#"><span>👀</span>SideEye</a>
     <div class="links">
       <a class="opt" data-link="github" href="https://github.com/ishmael07/SideEye">GitHub</a>
-      <a class="button small" data-link="download" href="https://github.com/ishmael07/SideEye/releases/latest/download/SideEye.zip">Download</a>
+      <a class="button small" data-link="download" href="https://github.com/ishmael07/SideEye/releases/latest/download/SideEye.dmg">Download</a>
     </div>
   </nav>
 
@@ -181,7 +181,7 @@
       <h1>For your eyes <span>only.</span></h1>
       <p class="lede">SideEye is a privacy screen for your Mac. It blurs the display the moment you look away, walk away, or someone looks over your shoulder.</p>
       <div class="actions">
-        <a class="button" data-link="download" href="https://github.com/ishmael07/SideEye/releases/latest/download/SideEye.zip">Download for Mac</a>
+        <a class="button" data-link="download" href="https://github.com/ishmael07/SideEye/releases/latest/download/SideEye.dmg">Download for Mac</a>
         <a class="gh" data-link="github" href="https://github.com/ishmael07/SideEye" aria-label="SideEye on GitHub">
           <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 8 0z"/></svg>
           <span>GitHub</span><span class="stars" id="stars" hidden></span>
@@ -290,7 +290,7 @@
     </div>
     <div class="install">
       <div class="command"><code id="command">curl -fsSL https://raw.githubusercontent.com/ishmael07/SideEye/main/install.sh | bash</code><button id="copy" aria-label="Copy the install command">Copy</button></div>
-      <p>Or <a data-link="download" href="https://github.com/ishmael07/SideEye/releases/latest/download/SideEye.zip">download the zip</a>. macOS will ask you to allow it in Privacy &amp; Security.</p>
+      <p>Or <a data-link="download" href="https://github.com/ishmael07/SideEye/releases/latest/download/SideEye.dmg">download the app</a> and drag it to Applications. macOS will ask you to allow it in Privacy &amp; Security.</p>
     </div>
   </section>
 
@@ -298,7 +298,7 @@
     <div class="eyes">👀</div>
     <h2>Free for Mac.</h2>
     <div class="actions">
-      <a class="button" data-link="download" href="https://github.com/ishmael07/SideEye/releases/latest/download/SideEye.zip">Download</a>
+      <a class="button" data-link="download" href="https://github.com/ishmael07/SideEye/releases/latest/download/SideEye.dmg">Download</a>
       <a class="textlink" data-link="github" href="https://github.com/ishmael07/SideEye">View source</a>
     </div>
   </div>
@@ -312,7 +312,7 @@ import { createHeadGL } from "./head-gl.js";
 import { loadPerson } from "./person-gl.js";
 // ---- links: change these in one place -------------------------------------
 const REPO = "ishmael07/SideEye", GITHUB = "https://github.com/" + REPO;
-const LINKS = { github: GITHUB, download: GITHUB + "/releases/latest/download/SideEye.zip", installer: GITHUB + "/blob/main/install.sh", author: "https://github.com/ishmael07" };
+const LINKS = { github: GITHUB, download: GITHUB + "/releases/latest/download/SideEye.dmg", installer: GITHUB + "/blob/main/install.sh", author: "https://github.com/ishmael07" };
 document.querySelectorAll("[data-link]").forEach(a => { a.href = LINKS[a.dataset.link]; if (a.dataset.link !== "download") { a.target = "_blank"; a.rel = "noopener"; } });
 
 // Star count next to the GitHub link; stays hidden if the API isn't reachable.
