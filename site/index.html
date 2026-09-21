@@ -272,6 +272,7 @@
 <script type="module">
 import { drawHead, drawRoom, drawFeatures, poseHead, PEOPLE } from "./head.js";
 import { createHeadGL } from "./head-gl.js";
+import { loadPerson } from "./person-gl.js";
 // ---- links: change these in one place -------------------------------------
 const GITHUB = "https://github.com/ishmael07/sideeye";
 const LINKS = { github: GITHUB, download: GITHUB + "/releases/latest", author: "https://github.com/ishmael07" };
@@ -384,7 +385,13 @@ syncControls();
 
 // ---- camera preview: a simulated person (see head.js), or your own video in camera mode ----
 const layer = document.createElement("canvas"), shade = createHeadGL();
+// Best first: the photo-textured avatar (loads in the background), then the built head shaded with WebGL, then flat canvas triangles.
+const avatars = {};
+for (const who of ["me", "them"]) loadPerson(new URL(`./assets/person/${who}/`, import.meta.url)).then(shadeAvatar => { avatars[who] = shadeAvatar; })
+  .catch(error => console.warn(`SideEye demo: the "${who}" avatar didn't load, using the built head.`, error));
 function drawPerson(ctx, person, w, h) {
+  const avatar = avatars[person.who];
+  if (avatar) { const { canvas, box } = avatar(person, w, h); ctx.drawImage(canvas, 0, 0); return box; }
   if (!shade) return drawHead(ctx, person);
   const box = poseHead(person); ctx.drawImage(shade(person, w, h), 0, 0); drawFeatures(ctx, person); return box;
 }
@@ -404,18 +411,18 @@ function drawPreview(dt) {
   drawRoom(room, w, h);
   const t = life.t, unit = h / 100, boxes = [];
   if (shown.them > 0.01) {                         // the side-eyer leans in from behind your shoulder
-    const lean = 1 - shown.them, them = { x: w * (0.77 + 0.38 * lean), y: h * (0.33 + 0.05 * lean) + Math.sin(t * 1.9) * unit * 0.5, scale: unit * 1.3, dim: 0.6,
-      yaw: -22 + 30 * lean + Math.sin(t * 0.8) * 2, pitch: 7, roll: -5 + 8 * lean, gazeX: 0.5, gazeY: 0.25, blink: 0, breath: 0, ...PEOPLE.them };
+    const lean = 1 - shown.them, them = { x: w * (0.8 + 0.4 * lean), y: h * (0.35 + 0.05 * lean) + Math.sin(t * 1.9) * unit * 0.5, scale: unit * 1.62, dim: 0.62,
+      yaw: -22 + 30 * lean + Math.sin(t * 0.8) * 2, pitch: 7, roll: -5 + 8 * lean, gazeX: 0.5, gazeY: 0.25, blink: 0, breath: 0, who: "them", ...PEOPLE.them };
     people.globalAlpha = Math.min(1, shown.them * 1.6); boxes.push([drawPerson(people, them, w, h), "rgb(255,69,58)", shown.them]); people.globalAlpha = 1;
   }
   if (shown.me > 0.01) {
     const gone = 1 - shown.me, lead = clamp((target.yaw - pose.yaw) / 22, -1, 1), leadY = clamp((target.pitch - pose.pitch) / 18, -1, 1);
     const me = { x: w * (0.45 - 1.2 * gone * gone), y: h * 0.46 + Math.sin(t * 1.1) * unit * 0.35, scale: unit * 2.7, dim: 1,
       yaw: pose.yaw + 1.5 * Math.sin(t * 0.63) + 0.8 * Math.sin(t * 1.37 + 1) + 60 * gone, pitch: pose.pitch + 1.1 * Math.sin(t * 0.81 + 2), roll: -pose.yaw * 0.07 + 0.9 * Math.sin(t * 0.47),
-      gazeX: clamp(-(pose.yaw / 38) - lead * 0.8, -1, 1), gazeY: clamp(pose.pitch / 30 + leadY * 0.7, -1, 1), blink: life.blink, breath: Math.sin(t * 1.5) * unit * 0.5, ...PEOPLE.me };
+      gazeX: clamp(-(pose.yaw / 38) - lead * 0.8, -1, 1), gazeY: clamp(pose.pitch / 30 + leadY * 0.7, -1, 1), blink: life.blink, breath: Math.sin(t * 1.5) * unit * 0.5, who: "me", ...PEOPLE.me };
     boxes.push([drawPerson(people, me, w, h), "rgb(48,209,88)", shown.me]);
   }
-  ctx.filter = `blur(${(0.55 * dpr).toFixed(2)}px)`; ctx.drawImage(layer, 0, 0); ctx.filter = "none";   // webcams are soft; this also melts the facets
+  ctx.filter = `blur(${((avatars.me ? 0.3 : 0.55) * dpr).toFixed(2)}px)`; ctx.drawImage(layer, 0, 0); ctx.filter = "none";   // webcams are soft; this also melts the facets
   const vignette = ctx.createRadialGradient(w / 2, h / 2, h * 0.35, w / 2, h / 2, w * 0.75);
   vignette.addColorStop(0, "rgba(0,0,0,0)"); vignette.addColorStop(1, "rgba(0,0,0,.45)"); ctx.fillStyle = vignette; ctx.fillRect(0, 0, w, h);
   ctx.lineWidth = Math.max(1.5, w / 190);
