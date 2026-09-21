@@ -129,20 +129,19 @@
 
 
   /* ---------- the rest: a few big lines ---------- */
-  section { padding-top: clamp(56px, 7vw, 104px); }
-  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px; border-top: 1px solid var(--line); padding-top: 40px; }
-  .three + .three { margin-top: 72px; }
-  .three h2 { font-size: clamp(24px, 2.2vw, 30px); letter-spacing: -.02em; font-weight: 600; margin-bottom: 10px; }
-  .three p { color: var(--soft); font-size: clamp(17px, 1.4vw, 20px); line-height: 1.5; }
-  .install { border-top: 1px solid var(--line); padding-top: 40px; display: grid; grid-template-columns: minmax(260px, 1fr) 2fr; gap: 24px 56px; align-items: start; }
-  .install h2 { font-size: clamp(24px, 2.2vw, 30px); letter-spacing: -.02em; font-weight: 600; margin-bottom: 10px; }
-  .install p { color: var(--soft); font-size: clamp(17px, 1.4vw, 20px); line-height: 1.5; } .install p a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #c7c7cc; }
+  section { padding-top: clamp(110px, 12vw, 190px); }
+  .title { font-size: clamp(32px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -.03em; font-weight: 600; margin-bottom: clamp(40px, 4.5vw, 68px); }
+  .title span { color: #a1a1a6; }
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(40px, 6vw, 96px); }
+  .three h3 { font-size: clamp(21px, 1.7vw, 25px); letter-spacing: -.015em; font-weight: 600; margin-bottom: 12px; }
+  .three p { color: var(--soft); font-size: clamp(17px, 1.3vw, 19px); line-height: 1.55; }
+  .install { max-width: 1000px; }
+  .install p { color: var(--soft); font-size: clamp(17px, 1.3vw, 19px); line-height: 1.55; margin-top: 22px; } .install p a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #c7c7cc; }
   .command { display: flex; align-items: center; gap: 12px; background: var(--fill); border-radius: 14px; padding: 8px 8px 8px 20px; min-width: 0; }
-  .command code { font: 15px/1.5 ui-monospace, "SF Mono", Menlo, monospace; overflow-x: auto; white-space: nowrap; flex: 1; padding: 8px 0; scrollbar-width: none; }
+  .command code { font: 14.5px/1.5 ui-monospace, "SF Mono", Menlo, monospace; overflow-x: auto; white-space: nowrap; flex: 1; padding: 8px 0; scrollbar-width: none; }
   .command button { flex: none; padding: 9px 16px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 15px; font-weight: 500; }
-  .manual { margin-top: 18px; font-size: 16px !important; } .how { min-width: 0; }
   #film video { display: block; width: 100%; border-radius: 14px; box-shadow: 0 0 0 1px rgba(0,0,0,.12); }
-  .end { text-align: center; padding: clamp(110px, 14vw, 190px) 0 clamp(90px, 10vw, 140px); }
+  .end { text-align: center; padding: clamp(140px, 16vw, 230px) 0 clamp(110px, 12vw, 170px); }
   .end .eyes { font-size: 84px; line-height: 1; margin-bottom: 18px; }
   .end h2 { font-size: clamp(38px, 5.2vw, 68px); letter-spacing: -.035em; font-weight: 600; line-height: 1.05; margin-bottom: 30px; }
   .end .actions { display: flex; gap: 26px; justify-content: center; align-items: center; }
@@ -160,7 +159,7 @@
     .pop { zoom: 2.2; top: 27.5cqw; right: 9.5cqw; } .pop::before { display: none; }
     .badge b { font-size: 4.6cqw; } .badge span { font-size: 2.5cqw; } .badge svg { width: 9cqw; height: 9cqw; } .badge div { padding: 5cqw 6cqw; border-radius: 4.5cqw; }
     .seg button, .acts button { padding: 9px 14px; font-size: 15px; }
-    .three { grid-template-columns: 1fr; gap: 32px; } .install { grid-template-columns: 1fr; }
+    .three { grid-template-columns: 1fr; gap: 32px; }
 
     nav .links a.opt { display: none; }
   }
@@ -264,36 +263,38 @@
   </section>
 
   <section>
+    <h2 class="title">Three ways it has your back.</h2>
     <div class="three">
-      <div><h2>Look away</h2><p>The blur follows your head, so the side you can still see stays readable.</p></div>
-      <div><h2>Walk away</h2><p>No face in front of the camera, no screen.</p></div>
-      <div><h2>Get side-eyed</h2><p>A second face behind you hides everything before they read a word.</p></div>
+      <div><h3>Look away</h3><p>The blur follows your head, so the side you can still see stays readable.</p></div>
+      <div><h3>Walk away</h3><p>No face in front of the camera, no screen.</p></div>
+      <div><h3>Get side-eyed</h3><p>A second face behind you hides everything before they read a word.</p></div>
     </div>
+  </section>
+
+  <section>
+    <h2 class="title">Nothing to buy. <span>Nothing to trust.</span></h2>
     <div class="three">
-      <div><h2>No AirPods</h2><p>It uses the camera your Mac already has. Nothing to buy, nothing to wear.</p></div>
-      <div><h2>Nothing leaves your Mac</h2><p>No network code, no account, no recordings. It never sees your screen.</p></div>
-      <div><h2>Free and open source</h2><p>No subscription, no $3.99. Read the code and check for yourself.</p></div>
+      <div><h3>No AirPods</h3><p>It uses the camera your Mac already has.</p></div>
+      <div><h3>Nothing leaves your Mac</h3><p>No network code, no account, no recordings. It never sees your screen.</p></div>
+      <div><h3>Free and open source</h3><p>No subscription, no $3.99. Read the code yourself.</p></div>
     </div>
   </section>
 
   <section id="works-on">
+    <h2 class="title">Made for Mac.</h2>
     <div class="three">
-      <div><h2>Mac</h2><p>macOS 14 Sonoma or later, on Apple silicon and Intel. Any built-in or external webcam.</p></div>
-      <div><h2>Windows</h2><p>Not yet. SideEye is a native Mac app built on Apple's Vision framework. A Windows version would be a separate build.</p></div>
-      <div><h2>iPhone and iPad</h2><p>No. iOS doesn't let an app cover or blur other apps.</p></div>
+      <div><h3>Mac</h3><p>macOS 14 or later, Apple silicon and Intel, any webcam.</p></div>
+      <div><h3>Windows</h3><p>Not yet. SideEye is a native Mac app.</p></div>
+      <div><h3>iPhone and iPad</h3><p>No. iOS doesn't let an app blur other apps.</p></div>
     </div>
   </section>
 
   <section id="install">
+    <h2 class="title">Install in one line.</h2>
     <div class="install">
-      <div>
-        <h2>Install</h2>
-        <p>Paste this in Terminal. It downloads the latest release into Applications and opens it. The script is <a data-link="installer" href="#">in the repo</a> if you want to read it first.</p>
-      </div>
-      <div class="how">
       <div class="command"><code id="command">curl -fsSL https://raw.githubusercontent.com/ishmael07/SideEye/main/install.sh | bash</code><button id="copy" aria-label="Copy the install command">Copy</button></div>
-      <p class="manual">Prefer to do it by hand? <a data-link="download" href="#">Download the zip</a>, drag SideEye to Applications and open it. SideEye isn't notarized by Apple yet, so macOS will stop it the first time: go to System Settings → Privacy &amp; Security and choose Open Anyway.</p>
-      </div>
+      <p>Paste it in Terminal. It puts the latest release in Applications and opens it. <a data-link="installer" href="#">Read the script</a> first if you like.</p>
+      <p>By hand: <a data-link="download" href="#">download the zip</a> and drag SideEye to Applications. Apple hasn't notarized it yet, so on first launch go to System Settings → Privacy &amp; Security and choose Open Anyway.</p>
     </div>
   </section>
 
