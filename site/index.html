@@ -119,12 +119,15 @@
   .pfoot { display: flex; align-items: center; gap: .8cqw; } .pfoot span { padding: .4cqw .9cqw; border-radius: .55cqw; background: rgba(255,255,255,.1); display: flex; gap: .45cqw; align-items: center; font-size: .98cqw; }
   .pfoot span svg { width: 1.15cqw; height: 1.15cqw; } .pfoot code { color: #77777f; font: .85cqw ui-monospace, "SF Mono", Menlo, monospace; } .pfoot span:last-child { margin-left: auto; }
 
-  /* One quiet row of text controls: the active one is ink, the rest are grey. No pills, no boxes. */
-  .seg, .acts { display: flex; gap: 28px; flex-wrap: wrap; }
-  .seg button, .acts button { padding: 6px 0; font-size: 16px; font-weight: 500; white-space: nowrap; color: #a1a1a6; display: inline-flex; align-items: center; gap: 8px; transition: color .15s; }
-  .seg button:hover, .acts button:hover { color: var(--soft); }
-  .seg button[aria-pressed="true"], .acts button[aria-pressed="true"] { color: var(--ink); }
+  /* Under the demo: a segmented switch for who is at the desk, and two buttons of the same height and shape for what happens to them. */
+  .seg { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--fill); }
+  .seg button, .acts button { border-radius: 999px; font-size: 15px; font-weight: 500; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; transition: background .15s, color .15s, box-shadow .15s; }
+  .seg button { padding: 8px 16px; color: var(--soft); } .seg button:hover { color: var(--ink); }
+  .seg button[aria-pressed="true"] { color: var(--ink); background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.14), 0 0 0 .5px rgba(0,0,0,.06); }
   .seg .live { display: none; width: 7px; height: 7px; border-radius: 50%; background: #30b650; } .seg button[aria-pressed="true"] .live { display: block; }
+  .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .acts button { padding: 12px 18px; background: var(--fill); color: var(--ink); } .acts button:hover { background: #e8e8ed; }
+  .acts button[aria-pressed="true"] { background: var(--ink); color: #fff; }
 
 
   /* ---------- the rest: a few big lines ---------- */
@@ -158,7 +161,7 @@
     .menubar { height: 4.4cqw; font-size: 2.1cqw; } .menubar span:not(.r) { display: none; } .menubar .eye { width: 2.8cqw; height: 2.8cqw; }
     .pop { zoom: 2.2; top: 27.5cqw; right: 9.5cqw; } .pop::before { display: none; }
     .badge b { font-size: 4.6cqw; } .badge span { font-size: 2.5cqw; } .badge svg { width: 9cqw; height: 9cqw; } .badge div { padding: 5cqw 6cqw; border-radius: 4.5cqw; }
-    .seg, .acts { gap: 22px; }
+    .seg button { padding: 8px 13px; } .acts button { padding: 12px 15px; }
     .three { grid-template-columns: 1fr; gap: 32px; }
 
     nav .links a.opt { display: none; }
